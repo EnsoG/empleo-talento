@@ -1,0 +1,249 @@
+/*
+-= Styles Index =-
+    1.- CSS Variables
+        1.1- Colors
+        1.2- Spacing
+    2.- General
+    3.- React Router
+    4.- Mantine
+    X.- Animations
+*/
+
+/* 1.- CSS Variables */
+:root {
+    /* Colors */
+    --mantine-black: #000;
+    --mantine-white: #fff;
+    --mantine-dark-0: #C9C9C9;
+    --mantine-dark-1: #b8b8b8;
+    --mantine-dark-2: #828282;
+    --mantine-dark-3: #696969;
+    --mantine-dark-4: #424242;
+    --mantine-dark-5: #3b3b3b;
+    --mantine-dark-6: #2e2e2e;
+    --mantine-dark-7: #242424;
+    --mantine-dark-8: #1f1f1f;
+    --mantine-dark-9: #141414;
+    --mantine-gray-0: #f8f9fa;
+    --mantine-gray-1: #f1f3f5;
+    --mantine-gray-2: #e9ecef;
+    --mantine-gray-3: #dee2e6;
+    --mantine-gray-4: #ced4da;
+    --mantine-gray-5: #adb5bd;
+    --mantine-gray-6: #868e96;
+    --mantine-gray-7: #495057;
+    --mantine-gray-8: #343a40;
+    --mantine-gray-9: #212529;
+    --mantine-red-0: #fff5f5;
+    --mantine-red-1: #ffe3e3;
+    --mantine-red-2: #ffc9c9;
+    --mantine-red-3: #ffa8a8;
+    --mantine-red-4: #ff8787;
+    --mantine-red-5: #ff6b6b;
+    --mantine-red-6: #fa5252;
+    --mantine-red-7: #f03e3e;
+    --mantine-red-8: #e03131;
+    --mantine-red-9: #c92a2a;
+    --mantine-pink-0: #fff0f6;
+    --mantine-pink-1: #ffdeeb;
+    --mantine-pink-2: #fcc2d7;
+    --mantine-pink-3: #faa2c1;
+    --mantine-pink-4: #f783ac;
+    --mantine-pink-5: #f06595;
+    --mantine-pink-6: #e64980;
+    --mantine-pink-7: #d6336c;
+    --mantine-pink-8: #c2255c;
+    --mantine-pink-9: #a61e4d;
+    --mantine-grape-0: #f8f0fc;
+    --mantine-grape-1: #f3d9fa;
+    --mantine-grape-2: #eebefa;
+    --mantine-grape-3: #e599f7;
+    --mantine-grape-4: #da77f2;
+    --mantine-grape-5: #cc5de8;
+    --mantine-grape-6: #be4bdb;
+    --mantine-grape-7: #ae3ec9;
+    --mantine-grape-8: #9c36b5;
+    --mantine-grape-9: #862e9c;
+    --mantine-violet-0: #f3f0ff;
+    --mantine-violet-1: #e5dbff;
+    --mantine-violet-2: #d0bfff;
+    --mantine-violet-3: #b197fc;
+    --mantine-violet-4: #9775fa;
+    --mantine-violet-5: #845ef7;
+    --mantine-violet-6: #7950f2;
+    --mantine-violet-7: #7048e8;
+    --mantine-violet-8: #6741d9;
+    --mantine-violet-9: #5f3dc4;
+    --mantine-indigo-0: #edf2ff;
+    --mantine-indigo-1: #dbe4ff;
+    --mantine-indigo-2: #bac8ff;
+    --mantine-indigo-3: #91a7ff;
+    --mantine-indigo-4: #748ffc;
+    --mantine-indigo-5: #5c7cfa;
+    --mantine-indigo-6: #4c6ef5;
+    --mantine-indigo-7: #4263eb;
+    --mantine-indigo-8: #3b5bdb;
+    --mantine-indigo-9: #364fc7;
+    --mantine-blue-0: #e7f5ff;
+    --mantine-blue-1: #d0ebff;
+    --mantine-blue-2: #a5d8ff;
+    --mantine-blue-3: #74c0fc;
+    --mantine-blue-4: #4dabf7;
+    --mantine-blue-5: #339af0;
+    --mantine-blue-6: #228be6;
+    --mantine-blue-7: #1c7ed6;
+    --mantine-blue-8: #1971c2;
+    --mantine-blue-9: #1864ab;
+    --mantine-cyan-0: #e3fafc;
+    --mantine-cyan-1: #c5f6fa;
+    --mantine-cyan-2: #99e9f2;
+    --mantine-cyan-3: #66d9e8;
+    --mantine-cyan-4: #3bc9db;
+    --mantine-cyan-5: #22b8cf;
+    --mantine-cyan-6: #15aabf;
+    --mantine-cyan-7: #1098ad;
+    --mantine-cyan-8: #0c8599;
+    --mantine-cyan-9: #0b7285;
+    --mantine-teal-0: #e6fcf5;
+    --mantine-teal-1: #c3fae8;
+    --mantine-teal-2: #96f2d7;
+    --mantine-teal-5: #20c997;
+    --mantine-teal-6: #12b886;
+    --mantine-teal-7: #0ca678;
+    --mantine-teal-8: #099268;
+    --mantine-teal-9: #087f5b;
+    --mantine-green-0: #ebfbee;
+    --mantine-green-1: #d3f9d8;
+    --mantine-green-2: #b2f2bb;
+    --mantine-green-3: #8ce99a;
+    --mantine-green-4: #69db7c;
+    --mantine-green-5: #51cf66;
+    --mantine-green-6: #40c057;
+    --mantine-green-7: #37b24d;
+    --mantine-green-8: #2f9e44;
+    --mantine-green-9: #2b8a3e;
+    --mantine-lime-0: #f4fce3;
+    --mantine-lime-1: #e9fac8;
+    --mantine-lime-2: #d8f5a2;
+    --mantine-lime-3: #c0eb75;
+    --mantine-lime-4: #a9e34b;
+    --mantine-lime-5: #94d82d;
+    --mantine-lime-6: #82c91e;
+    --mantine-lime-7: #74b816;
+    --mantine-lime-8: #66a80f;
+    --mantine-lime-9: #5c940d;
+    --mantine-yellow-0: #fff9db;
+    --mantine-yellow-1: #fff3bf;
+    --mantine-yellow-2: #ffec99;
+    --mantine-yellow-3: #ffe066;
+    --mantine-yellow-4: #ffd43b;
+    --mantine-yellow-5: #fcc419;
+    --mantine-yellow-6: #fab005;
+    --mantine-yellow-7: #f59f00;
+    --mantine-yellow-8: #f08c00;
+    --mantine-yellow-9: #e67700;
+    --mantine-orange-0: #fff4e6;
+    --mantine-orange-1: #ffe8cc;
+    --mantine-orange-2: #ffd8a8;
+    --mantine-orange-3: #ffc078;
+    --mantine-orange-4: #ffa94d;
+    --mantine-orange-5: #ff922b;
+    --mantine-orange-6: #fd7e14;
+    --mantine-orange-7: #f76707;
+    --mantine-orange-8: #e8590c;
+    --mantine-orange-9: #d9480f;
+}
+
+/* 2.- General */
+body {
+    margin: 0px;
+    padding: 0px;
+    height: 100vh;
+}
+
+#root {
+    height: 100%;
+}
+
+.job-card {
+    position: relative;
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.job-card.featured {
+    border: 2px solid var(--mantine-blue-6);
+}
+
+.job-featured {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    margin-right: 20px;
+    background-color: var(--mantine-blue-6);
+    height: 50px;
+    width: 25px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+}
+
+.icon-card {
+    background-color: var(--mantine-blue-2);
+    width: 250px;
+}
+
+.icon-card .mantine-Center-root div {
+    display: flex;
+    padding: var(--mantine-spacing-lg);
+    background-color: var(--mantine-blue-6);
+    border-radius: 100%;
+}
+
+/* 3.- React Router */
+.react-link,
+.react-link-primary {
+    text-decoration: none;
+    color: inherit;
+}
+
+.react-link-primary {
+    color: var(--mantine-blue-6);
+}
+
+.react-link-primary:hover {
+    text-decoration: underline;
+    color: var(--mantine-blue-8);
+}
+
+/* 4.- Mantine */
+.custom-dropzone {
+    border-radius: var(--mantine-radius-sm);
+    border: 2px dotted var(--mantine-gray-2);
+}
+
+.custom-dropzone:hover {
+    background-color: var(--mantine-gray-1);
+    cursor: pointer;
+}
+
+/* X.- Animations */
+@keyframes rotate-360-infinite {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes move-10-infinite {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}

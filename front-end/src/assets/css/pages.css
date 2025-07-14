@@ -1,0 +1,144 @@
+@import url("./styles.css");
+
+/*
+-= Pages Index =-
+    1.- Home
+    2.- Contact
+    3.- Services
+    4.- Job Board
+    5.- Job Detail
+    6.- Company Overview
+    X.- About Us
+    X.- Terms Policies
+    X.- Events
+    X.- Event Detail
+    X.- Not Found
+    X.- Media Queries
+*/
+
+/* 1.- Home */
+#home-banner {
+    position: relative;
+    z-index: 0;
+    min-height: auto;
+    padding-bottom: 20%;
+    background-color: var(--mantine-blue-2);
+}
+
+#home-banner-img {
+    z-index: 0;
+    animation: move-10-infinite 3s ease-in-out infinite;
+}
+
+#home-featured-jobs {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+#home-last-jobs {
+    position: relative;
+    z-index: 0;
+    background-color: var(--mantine-blue-2);
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+#home-contact {
+    position: relative;
+    z-index: 0;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* 2.- Contact */
+#contact {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+#contact-map {
+    position: relative;
+    z-index: 0;
+}
+
+#contact-map,
+#contact-map .leaflet-container {
+    border-radius: var(--mantine-radius-md);
+    height: 100%;
+}
+
+/* 3.- Services */
+#services {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+.pricing-card {
+    height: max-content;
+    width: 350px;
+}
+
+#pricing-table .mantine-Table-th {
+    background-color: var(--mantine-blue-6);
+    color: var(--mantine-white);
+}
+
+/* 4.- Job Board */
+#job-board {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* 5.- Job Detail */
+#job-detail {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* 6.- Company Overview */
+#company-overview {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* X.- About Us */
+#about-us {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* X.- Terms Policies */
+#terms-policies {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* X.- Events */
+#events {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* X.- Event Detail */
+#event-detail {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* X.- Not Found */
+#not-found {
+    background-color: var(--mantine-blue-2);
+    height: 100%;
+}
+
+/* X.- Media Queries */
