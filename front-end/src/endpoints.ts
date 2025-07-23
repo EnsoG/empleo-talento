@@ -8,11 +8,10 @@ export const endpoints = {
     // Metadata Endpoints
     metadata: `${baseUrl}/metadata`,
     getCities: `${baseUrl}/metadata/cities`,
-    getCompanySectors: `${baseUrl}/metadata/company-sectors`,
-    getGenericPositions: `${baseUrl}/metadata/generic-positions`,
-    getPerformanceAreas: `${baseUrl}/metadata/performance-areas`,
-    // Job Schedules Endpoints
-    jobSchedules: `${baseUrl}/job-schedules`,
+    contractTypes: `${baseUrl}/metadata/contract-types`,
+    jobTypes: `${baseUrl}/metadata/job-types`,
+    shifts: `${baseUrl}/metadata/shifts`,
+    jobDays: `${baseUrl}/metadata/job-days`,
     // Auth Endpoints
     login: `${baseUrl}/auth/login`,
     loginOAuth: `${baseUrl}/auth/login/oauth`,
@@ -24,6 +23,7 @@ export const endpoints = {
     changePassword: `${baseUrl}/auth/change-password`,
     // Candidate Endpoints
     candidates: `${baseUrl}/candidates`,
+    getResume: `${baseUrl}/candidates/resume`,
     updateCandidatePhoto: `${baseUrl}/candidates/update-photo`,
     updateCandidateResume: `${baseUrl}/candidates/update-resume`,
     // Candidate Study Endpoints
@@ -42,8 +42,20 @@ export const endpoints = {
     postulations: `${baseUrl}/postulations`,
     // Work Experience Endpoints
     candidateWorkExperiences: `${baseUrl}/work-experiences`,
-    // Softwares Endpoints
+    // Software Endpoints
     softwares: `${baseUrl}/softwares`,
+    // Language Endpoints
+    languages: `${baseUrl}/languages`,
+    // Company Sector Endpoints
+    companySectors: `${baseUrl}/company-sectors`,
+    // Performance Area Endpoints
+    performanceAreas: `${baseUrl}/performance-areas`,
+    // Certification Type Endpoints
+    certificationTypes: `${baseUrl}/certification-types`,
+    // Role Position Endpoints
+    rolePositions: `${baseUrl}/role-positions`,
+    // Generic Position Endpoints
+    genericPositions: `${baseUrl}/generic-positions`,
     // Company Endpoints
     companies: `${baseUrl}/companies`,
     getUserCompany: `${baseUrl}/companies/by-user`,
@@ -52,6 +64,12 @@ export const endpoints = {
     // Company User Endpoints
     companyUsers: `${baseUrl}/company-users`,
     getStaff: `${baseUrl}/company-users/staff`,
+    // Job Schedules Endpoints
+    jobSchedules: `${baseUrl}/job-schedules`,
+    // Candidate Plan Endpoints
+    candidatePlans: `${baseUrl}/candidate-plans`,
+    // Company Plan Endpoints
+    companyPlans: `${baseUrl}/company-plans`,
     // Admin User Endpoints
     adminUsers: `${baseUrl}/admin-users`,
 } as const

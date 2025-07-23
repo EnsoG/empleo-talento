@@ -29,7 +29,6 @@ export const AdminLogin = () => {
     });
 
     const handleSubmit = async (values: typeof form.values) => {
-        console.log(values)
         // Transform Values, Do Login And Check Auth
         const data = loginSchema.parse(values);
         await fetchData(endpoints.login, {

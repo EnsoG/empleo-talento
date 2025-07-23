@@ -6,10 +6,7 @@ from utilities import (
     validate_phone_format
 )
 from .company_user import CreateFounder, UserStateEnum
-
-class GetSector(BaseModel):
-    sector_id: int
-    name: str
+from .company_sector import GetSector
 
 class BaseCompany(BaseModel):
     model_config=ConfigDict(

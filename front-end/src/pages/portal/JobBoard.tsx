@@ -76,7 +76,9 @@ export const JobBoard = () => {
     return (
         <PortalLayout>
             <PortalBanner title="Bolsa Empleo" />
-            <Box id="job-board">
+            <Box
+                className="portal-section"
+                component="section">
                 <Container size="xl">
                     <Grid>
                         <Grid.Col span={{ base: 12, lg: 3 }}>

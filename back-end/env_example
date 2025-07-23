@@ -9,5 +9,7 @@ SMTP_PASSWORD=example
 SMTP_MAIL_FROM=example
 # JWT Variables
 JWT_SECRET_KEY=example
+# WkhtmlToPDF .exe Path
+WKHTMLTOPDF_EXE_PATH=example
 # CORS Variables
 FRONT_END_DOMAIN=example1

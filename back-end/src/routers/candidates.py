@@ -1,16 +1,29 @@
 import os
-from fastapi import APIRouter, HTTPException, UploadFile, File, Depends, status
-from fastapi.responses import JSONResponse
+import pdfkit
+from fastapi import APIRouter, HTTPException, UploadFile, File, Depends, Path, status
+from fastapi.responses import JSONResponse, StreamingResponse
+from sqlmodel import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import IntegrityError
+from jinja2 import Environment, FileSystemLoader
+from io import BytesIO
+from typing import Annotated
 from uuid import uuid4
 
 from config.db import SessionDep
+from config.settings import get_settings
 from models.candidate import Candidate
+from models.candidate_certification import CandidateCertification
+from models.candidate_software import CandidateSoftware
+from models.candidate_language import CandidateLanguage
 from schemas.candidate import UpdateCandidate, GetCandidate
 from utilities import get_current_user
 
 router = APIRouter(prefix="/candidates")
+template_dir = Environment(loader=FileSystemLoader("src/templates/cv"))
+settings = get_settings()
 
+WKHTMLTOPDF_PATH = settings.wkhtmltopdf_exe_path
 RESUME_CONTENT_TYPES = {
     "application/pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -35,6 +48,54 @@ async def get_candidate(
             )
         return candidate
     except Exception as ex:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail="An error occurred on the server"
+        )
+
+@router.get("/resume/{candidate_id}")
+async def get_resume(
+    session: SessionDep,
+    candidate_id: Annotated[int, Path(gt=0)],
+    _: dict = Depends(get_current_user)
+):
+    try:
+        # Check If Candidate Exists
+        query = select(Candidate).options(
+            selectinload(Candidate.work_experiences),
+            selectinload(Candidate.candidate_studies),
+            selectinload(Candidate.candidate_certifications).options(
+                selectinload(CandidateCertification.certification_type)
+            ),
+            selectinload(Candidate.candidate_softwares).options(
+                selectinload(CandidateSoftware.software),
+                selectinload(CandidateSoftware.knownledge_level)
+            ),
+            selectinload(Candidate.candidate_languages).options(
+                selectinload(CandidateLanguage.language),
+                selectinload(CandidateLanguage.language_level)
+            )
+        ).where(Candidate.candidate_id == candidate_id)
+        result = await session.execute(query)
+        candidate = result.scalar_one_or_none()
+        if not candidate:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={"detail": "Candidate does not exists"}
+            )
+        # Set Resume HTML Template
+        template = template_dir.get_template("cv.html")
+        html_content = template.render(candidate=candidate)
+        # Generate PDF
+        config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH) if WKHTMLTOPDF_PATH else None
+        pdf_bytes = pdfkit.from_string(html_content, False, configuration=config)
+        return StreamingResponse(
+            BytesIO(pdf_bytes),
+            media_type="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=cv.pdf"}
+        )
+    except Exception as ex:
+        print(ex)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
             detail="An error occurred on the server"

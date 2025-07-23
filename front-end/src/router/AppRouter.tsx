@@ -12,7 +12,7 @@ import { ProtectedRoutes } from "./ProtectedRoutes";
 import {
     MyAccount,
     MyJobs,
-    CompanyInfo,
+    MyCompany,
     PublishJob,
     JobManagement,
     MyStaff,
@@ -20,6 +20,18 @@ import {
     CompanyDetail,
     MySoftwares,
     MyJobSchedules,
+    MyCandidatePlans,
+    AddCandidatePlan,
+    CandidatePlanDetail,
+    MyCompanyPlans,
+    MyLanguages,
+    MyCompanySectors,
+    MyCertificationTypes,
+    MyPerformanceAreas,
+    MyRolePositions,
+    MyGenericPositions,
+    MyContractTypes,
+    MyJobDays
 } from "../pages/panel";
 import {
     Home,
@@ -43,6 +55,9 @@ import {
     AdminLogin
 } from "../pages/auth";
 import { NotFound } from "../pages/NotFound";
+import { MyJobTypes } from "../pages/panel/MyJobTypes";
+import { MyShifts } from "../pages/panel/MyShifts";
+import { MyPendingJobs } from "../pages/panel/MyPendingJobs";
 
 export const AppRouter = () => {
     const { pathname } = useLocation();
@@ -86,9 +101,24 @@ export const AppRouter = () => {
             {/* Panel (Admin)*/}
             <Route element={<ProtectedRoutes requiredRoles={[UserRole.admin]} />}>
                 <Route path={AppPaths.myCompanies} element={<MyCompanies />} />
+                <Route path={AppPaths.myPendingJobs} element={<MyPendingJobs />} />
                 <Route path={`${AppPaths.companyDetail}/:id`} element={<CompanyDetail />} />
                 <Route path={AppPaths.mySoftwares} element={<MySoftwares />} />
+                <Route path={AppPaths.myLanguages} element={<MyLanguages />} />
+                <Route path={AppPaths.myCompanySectors} element={<MyCompanySectors />} />
+                <Route path={AppPaths.myCertificationTypes} element={<MyCertificationTypes />} />
+                <Route path={AppPaths.myPerformanceAreas} element={<MyPerformanceAreas />} />
                 <Route path={AppPaths.myJobSchedules} element={<MyJobSchedules />} />
+                <Route path={AppPaths.myGenericPositions} element={<MyGenericPositions />} />
+                <Route path={AppPaths.myRolePositions} element={<MyRolePositions />} />
+                <Route path={AppPaths.myContractTypes} element={<MyContractTypes />} />
+                <Route path={AppPaths.myJobTypes} element={<MyJobTypes />} />
+                <Route path={AppPaths.myShifts} element={<MyShifts />} />
+                <Route path={AppPaths.myJobDays} element={<MyJobDays />} />
+                <Route path={AppPaths.myCandidatePlans} element={<MyCandidatePlans />} />
+                <Route path={AppPaths.addCandidatePlan} element={<AddCandidatePlan />} />
+                <Route path={`${AppPaths.candidatePlanDetail}/:id`} element={<CandidatePlanDetail />} />
+                <Route path={AppPaths.myCompanyPlans} element={<MyCompanyPlans />} />
             </Route>
             {/* Panel (All Staff)*/}
             <Route element={<ProtectedRoutes
@@ -103,7 +133,7 @@ export const AppRouter = () => {
                 requiredPositions={[UserPosition.founder]} />
             }>
                 <Route path={AppPaths.myStaff} element={<MyStaff />} />
-                <Route path={AppPaths.companyInfo} element={<CompanyInfo />} />
+                <Route path={AppPaths.myCompany} element={<MyCompany />} />
             </Route>
             {/* Other */}
             <Route path="*" element={<Navigate to={AppPaths.notFound} />} />

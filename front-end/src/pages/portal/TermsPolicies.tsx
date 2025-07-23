@@ -25,7 +25,9 @@ export const TermsPolicies = () => {
     return (
         <PortalLayout>
             <PortalBanner title="Terminos y Politicas" />
-            <Box id="terms-policies">
+            <Box
+                className="portal-section"
+                component="section">
                 <Container size="xl">
                     <Title
                         order={2}

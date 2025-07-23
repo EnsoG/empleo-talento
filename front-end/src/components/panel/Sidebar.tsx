@@ -10,11 +10,26 @@ import {
 import {
     Building,
     Buildings,
+    Calendar,
     CalendarDots,
+    Certificate,
     Clock,
+    FileText,
     GridFour,
+    Hourglass,
+    IdentificationCard,
+    Megaphone,
+    OfficeChair,
+    Package,
+    Swap,
     Tag,
+    Target,
+    Timer,
+    Translate,
+    User,
+    UserGear,
     Users,
+    UsersThree,
     X
 } from "@phosphor-icons/react";
 
@@ -30,15 +45,69 @@ const navItems: SidebarItemProps[] = [
         roles: [UserRole.admin]
     },
     {
-        label: "Mis Ofertas",
-        icon: <Tag />,
-        path: AppPaths.myJobs,
+        label: "Gestion Ofertas",
+        icon: <Megaphone />,
+        path: "",
+        options: [
+            {
+                label: "Todas",
+                icon: <Tag />,
+                path: AppPaths.myJobs,
+            },
+            {
+                label: "Por Verificar",
+                icon: <Hourglass />,
+                path: AppPaths.myPendingJobs,
+            },
+        ],
         roles: [UserRole.admin]
     },
     {
         label: "Mis Softwares",
         icon: <GridFour />,
         path: AppPaths.mySoftwares,
+        roles: [UserRole.admin]
+    },
+    {
+        label: "Mis Idiomas",
+        icon: <Translate />,
+        path: AppPaths.myLanguages,
+        roles: [UserRole.admin]
+    },
+    {
+        label: "Mis Sectores Empresariales",
+        icon: <OfficeChair />,
+        path: AppPaths.myCompanySectors,
+        roles: [UserRole.admin]
+    },
+    {
+        label: "Mis Tipos Certificaciones",
+        icon: <Certificate />,
+        path: AppPaths.myCertificationTypes,
+        roles: [UserRole.admin]
+    },
+    {
+        label: "Mis Areas Desempeño",
+        icon: <Target />,
+        path: AppPaths.myPerformanceAreas,
+        roles: [UserRole.admin]
+    },
+    {
+        label: "Gestion Cargos Genericos",
+        icon: <UsersThree />,
+        path: "",
+        options: [
+            {
+                label: "Mis Cargos Genericos",
+                icon: <IdentificationCard />,
+                path: AppPaths.myGenericPositions,
+            },
+            {
+                label: "Mis Roles Cargo",
+                icon: <UserGear />,
+                path: AppPaths.myRolePositions,
+            }
+        ],
         roles: [UserRole.admin]
     },
     {
@@ -50,6 +119,44 @@ const navItems: SidebarItemProps[] = [
                 label: "Mis Horarios",
                 icon: <Clock />,
                 path: AppPaths.myJobSchedules,
+            },
+            {
+                label: "Mis Tipo Contrato",
+                icon: <FileText />,
+                path: AppPaths.myContractTypes,
+            },
+            {
+                label: "Mis Jornadas",
+                icon: <Timer />,
+                path: AppPaths.myJobTypes,
+            },
+            {
+                label: "Mis Turnos",
+                icon: <Swap />,
+                path: AppPaths.myShifts,
+            },
+            {
+                label: "Mis Dias Laborales",
+                icon: <Calendar />,
+                path: AppPaths.myJobDays,
+            }
+        ],
+        roles: [UserRole.admin]
+    },
+    {
+        label: "Gestion Planes",
+        icon: <Package />,
+        path: "",
+        options: [
+            {
+                label: "Planes Candidatos",
+                icon: <User />,
+                path: AppPaths.myCandidatePlans,
+            },
+            {
+                label: "Planes Empresas",
+                icon: <Building />,
+                path: AppPaths.myCompanyPlans,
             }
         ],
         roles: [UserRole.admin]
@@ -69,7 +176,7 @@ const navItems: SidebarItemProps[] = [
     {
         label: "Informacion Empresa",
         icon: <Building />,
-        path: AppPaths.companyInfo,
+        path: AppPaths.myCompany,
         positions: [UserPosition.founder]
     }
 ];
@@ -85,7 +192,7 @@ export const Sidebar = ({ openedSidebar, closeSidebar }: SidebarProps) => {
     const visibleNavItems = navItems.filter(item => {
         if (!item.positions && !item.roles) return true;
         // Check First Priority
-        if (!user?.user_role) return false;
+        if (user?.user_role == undefined || user?.user_role == null) return false;
         if (item.roles) return item.roles.includes(user.user_role);
         // Check Second Priority
         if (!user?.user_position) return false;

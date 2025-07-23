@@ -23,12 +23,27 @@ export enum AppPaths {
     myCompanies = "/panel/my-companies",
     mySoftwares = "/panel/my-softwares",
     myJobSchedules = "/panel/my-job-schedules",
+    myCandidatePlans = "/panel/my-candidate-plans",
+    addCandidatePlan = "/panel/my-candidate-plans/add",
+    candidatePlanDetail = "/panel/my-candidate-plans/detail",
+    myCompanyPlans = "/panel/my-company-plans",
+    myLanguages = "/panel/my-languages",
+    myCompanySectors = "/panel/my-company-sectors",
+    myPerformanceAreas = "/panel/my-performance-areas",
+    myCertificationTypes = "/panel/my-certification-types",
+    myRolePositions = "/panel/my-role-positions",
+    myGenericPositions = "/panel/my-generic-positions",
+    myContractTypes = "/panel/my-contract-types",
+    myJobTypes = "/panel/my-job-types",
+    myShifts = "/panel/my-shifts",
+    myJobDays = "/panel/my-job-days",
     companyDetail = "/panel/company-detail",
     publishJob = "/panel/publish-job",
     myJobs = "/panel/my-jobs",
+    myPendingJobs = "/panel/my-pending-jobs",
     jobManagement = "/panel/job-detail",
+    myCompany = "/panel/my-company",
     myStaff = "/panel/my-staff",
-    companyInfo = "/panel/company-info",
     /* Other */
     notFound = "/not-found"
 }
@@ -286,9 +301,19 @@ export type PerformanceArea = {
     name: string;
 }
 
+export type PerformanceAreas = {
+    total_areas: number;
+    performance_areas: PerformanceArea[];
+}
+
 export type ContractType = {
     type_id: number;
     name: string;
+}
+
+export type ContractTypes = {
+    total_contracts: number;
+    contract_types: ContractType[];
 }
 
 export type CompanySector = {
@@ -296,20 +321,20 @@ export type CompanySector = {
     name: string;
 }
 
+export type CompanySectors = {
+    total_sectors: number;
+    company_sectors: CompanySector[];
+}
+
 export type JobType = {
     job_type_id: number;
     name: string;
 }
 
-export const jobTypes: readonly string[] = [
-    "Jornada Ordinaria",
-    "Jornada Bisemanal",
-    "Jornada Excepcional",
-    "Teletrabajo",
-    "Hibrido",
-    "Part-Time",
-    "Freelance"
-];
+export type JobTypes = {
+    total_types: number;
+    job_types: JobType[];
+}
 
 export type JobSchedule = {
     schedule_id: number;
@@ -321,20 +346,25 @@ export type JobSchedules = {
     job_schedules: JobSchedule[];
 }
 
-export const shifts: readonly string[] = [
-    "5x2", "6x1", "10x5",
-    "8x6", "7x7", "4x4",
-    "4x3", "10x10", "14x14"
-];
+export type Shift = {
+    shift_id: number;
+    name: string;
+}
 
-export const jobDays: readonly string[] = [
-    "Lunes a Viernes",
-    "Lunes a Sabado",
-    "Martes a Lunes",
-    "Miercoles a Martes",
-    "Lunes a Jueves"
-];
+export type Shifts = {
+    total_shifts: number;
+    shifts: Shift[];
+}
 
+export type JobDay = {
+    day_id: number;
+    name: string;
+}
+
+export type JobDays = {
+    total_days: number;
+    job_days: JobDay[];
+}
 
 export enum QuestionType {
     yesOrNo = 0,
@@ -358,10 +388,25 @@ export type Question = {
     question_type: QuestionType;
 }
 
+export type RolePosition = {
+    role_id: number;
+    name: string;
+}
+
+export type RolePositions = {
+    total_roles: number;
+    role_positions: RolePosition[];
+}
+
 export type GenericPosition = {
     position_id: number;
     name: string;
-    role_id: number;
+    role_position: RolePosition;
+}
+
+export type GenericPositions = {
+    total_positions: number;
+    generic_positions: GenericPosition[];
 }
 
 export enum OfferState {
@@ -487,6 +532,7 @@ export type Candidate = {
 }
 
 export type SummaryCandidate = Pick<Candidate,
+    "candidate_id" |
     "name" |
     "paternal" |
     "maternal" |
@@ -534,6 +580,11 @@ export type CertificationType = {
     name: string;
 }
 
+export type CertificationTypes = {
+    total_types: number;
+    certification_types: CertificationType[];
+}
+
 export type CandidateCertification = {
     certification_id: number;
     name: string;
@@ -570,6 +621,11 @@ export type Language = {
     name: string;
 }
 
+export type Languages = {
+    total_languages: number;
+    languages: Language[];
+}
+
 export type LanguageLevel = {
     level_id: number;
     name: string;
@@ -583,10 +639,7 @@ export type CandidateLanguage = {
 
 export type Metadata = {
     knownledge_levels: KnowledgeLevel[];
-    languages: Language[];
     language_levels: LanguageLevel[];
-    certification_types: CertificationType[];
-    contract_types: ContractType[];
     regions: Region[];
 }
 
@@ -596,4 +649,30 @@ export type Admin = {
     paternal: string;
     maternal: string | null;
     email: string;
+}
+
+export enum PlanState {
+    active = "Activo",
+    inactive = "Inactivo"
+}
+
+export type CandidatePlan = {
+    plan_id: number;
+    name: string;
+    value: number;
+    description: string | null;
+    state: PlanState,
+    photo: string | null;
+}
+
+export type CandidatePlans = {
+    total_plans: number;
+    candidate_plans: CandidatePlan[];
+}
+
+export type CompanyPlan = CandidatePlan;
+
+export type CompanyPlans = {
+    total_plans: number;
+    company_plans: CompanyPlan[];
 }

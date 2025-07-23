@@ -97,7 +97,9 @@ export const CompanyOverview = () => {
     return (
         <PortalLayout>
             <PortalBanner title="Presentacion Empresa" />
-            <Box id="company-overview">
+            <Box
+                className="portal-section"
+                component="section">
                 <Container size="xl">
                     <Skeleton
                         height="100%"

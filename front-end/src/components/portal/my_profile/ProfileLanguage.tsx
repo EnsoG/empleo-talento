@@ -15,20 +15,26 @@ import { Info, Plus } from "@phosphor-icons/react";
 import { useFetch } from "../../../hooks/useFetch";
 import { useModal } from "../../../hooks/useModal";
 import { endpoints } from "../../../endpoints";
-import { CandidateLanguage } from "../../../types";
+import { CandidateLanguage, Languages } from "../../../types";
 import { LanguageForm } from "./LanguageForm";
 import { LanguageItem } from "./LanguageItem";
 
 export const ProfileLanguage = () => {
-    const { data: languages, isLoading: langLoading, fetchData: fetchLanguages } = useFetch<CandidateLanguage[]>();
+    const { data: candidateLanguages, isLoading: candLangLoading, fetchData: fetchCandLang } = useFetch<CandidateLanguage[]>();
+    const { data, isLoading: langLoading, fetchData: fetchLanguages } = useFetch<Languages>();
     const { openModal } = useModal();
 
-    const getLanguages = async () => await fetchLanguages(endpoints.candidateLanguages, {
+    const getCandLang = async () => await fetchCandLang(endpoints.candidateLanguages, {
         method: "GET",
         credentials: "include"
     });
 
+    const getLanguages = async () => await fetchLanguages(endpoints.languages, {
+        method: "GET"
+    });
+
     useEffect(() => {
+        getCandLang();
         getLanguages();
     }, []);
 
@@ -42,30 +48,33 @@ export const ProfileLanguage = () => {
                 <ActionIcon
                     size="md"
                     variant="transparent"
-                    onClick={() => openModal(
-                        <LanguageForm
-                            type="create"
-                            onGetLanguages={getLanguages} />,
-                        "Agregar Idioma"
-                    )}>
+                    onClick={() => {
+                        if (data) openModal(
+                            <LanguageForm
+                                type="create"
+                                languages={data?.languages}
+                                onGetLanguages={getCandLang} />,
+                            "Agregar Idioma"
+                        )
+                    }}>
                     <Plus />
                 </ActionIcon>
             </Group>
             <Divider my="sm" />
             <Skeleton
                 height="100%"
-                visible={langLoading}>
+                visible={candLangLoading || langLoading}>
                 <ScrollArea.Autosize
                     type="auto"
                     pr="md"
                     mah={250}>
                     <Stack>
-                        {(languages?.length != 0)
-                            ? languages?.map((l) => (
+                        {(candidateLanguages?.length != 0)
+                            ? candidateLanguages?.map((l) => (
                                 <LanguageItem
                                     key={l.candidate_language_id}
                                     language={l}
-                                    onGetLanguages={getLanguages} />
+                                    onGetLanguages={getCandLang} />
                             ))
                             : <Alert
                                 title="Sin idiomas registrados"

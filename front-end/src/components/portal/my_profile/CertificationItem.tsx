@@ -80,13 +80,24 @@ export const CertificationItem = ({ certification, onGetCertifications }: Certif
             </Text>
             <Text
                 c="gray"
-                size="xs">Institucion: {certification.institution ?? "Sin especificar"}</Text>
+                size="xs">
+                Tipo Certificacion: {certification.certification_type.name}
+            </Text>
             <Text
                 c="gray"
-                size="xs">Fecha Obtencion: {obtDate ?? "Sin especificar"}</Text>
+                size="xs">
+                Institucion: {certification.institution ?? "Sin especificar"}
+            </Text>
             <Text
                 c="gray"
-                size="xs">Fecha Vencimiento: {expDate ?? "Sin especificar"}</Text>
+                size="xs">
+                Fecha Obtencion: {obtDate ?? "Sin especificar"}
+            </Text>
+            <Text
+                c="gray"
+                size="xs">
+                Fecha Vencimiento: {expDate ?? "Sin especificar"}
+            </Text>
         </Box>
     )
 }

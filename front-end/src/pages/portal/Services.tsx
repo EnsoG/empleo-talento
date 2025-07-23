@@ -135,7 +135,9 @@ export const Services = () => {
     return (
         <PortalLayout>
             <PortalBanner title="Servicios" />
-            <Box id="services">
+            <Box
+                className="portal-section"
+                component="section">
                 <Container size="xl">
                     <Text
                         fz={{ base: "lg", sm: "xl" }}

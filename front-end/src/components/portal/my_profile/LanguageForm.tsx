@@ -11,26 +11,27 @@ import { useFetch } from "../../../hooks/useFetch";
 import { useModal } from "../../../hooks/useModal";
 import { endpoints } from "../../../endpoints";
 import { createLanguageSchema, updateLanguageSchema } from "../../../schemas/portalSchemas";
-import { CandidateLanguage } from "../../../types";
+import { CandidateLanguage, Language } from "../../../types";
 
 interface LanguageFormProps {
     type: "create" | "update";
-    language?: Pick<CandidateLanguage,
+    languages?: Language[];
+    candidateLanguage?: Pick<CandidateLanguage,
         "candidate_language_id" |
         "language_level"
     >;
     onGetLanguages: () => Promise<void>;
 }
 
-export const LanguageForm = ({ type, language, onGetLanguages }: LanguageFormProps) => {
+export const LanguageForm = ({ type, candidateLanguage, languages, onGetLanguages }: LanguageFormProps) => {
     const { metadata } = useMetadata();
-    const { isLoading, fetchData } = useFetch();
     const { closeModal } = useModal();
+    const { isLoading, fetchData } = useFetch();
     const form = useForm({
         mode: "uncontrolled",
         initialValues: {
             language: "",
-            level: language?.language_level.level_id ? String(language.language_level.level_id) : ""
+            level: candidateLanguage?.language_level.level_id ? String(candidateLanguage.language_level.level_id) : ""
         },
         validate: zodResolver((type == "create") ? createLanguageSchema : updateLanguageSchema)
     });
@@ -40,7 +41,7 @@ export const LanguageForm = ({ type, language, onGetLanguages }: LanguageFormPro
         const data = (type == "create")
             ? createLanguageSchema.parse(values)
             : updateLanguageSchema.parse(values);
-        await fetchData(`${endpoints.candidateLanguages}${(type == "create" ? "" : `/${language?.candidate_language_id}`)}`, {
+        await fetchData(`${endpoints.candidateLanguages}${(type == "create" ? "" : `/${candidateLanguage?.candidate_language_id}`)}`, {
             showNotifications: true,
             successMessage: (type == "create")
                 ? "Idioma registrado exitosamente"
@@ -65,7 +66,7 @@ export const LanguageForm = ({ type, language, onGetLanguages }: LanguageFormPro
                     <Select
                         label="Idioma"
                         placeholder="Seleccione el idioma"
-                        data={metadata.languages?.map((l) => ({
+                        data={languages?.map((l) => ({
                             value: String(l.language_id),
                             label: l.name
                         }))}

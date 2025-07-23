@@ -9,6 +9,8 @@ from .company import Company
 from .contract_type import ContractType
 from .job_type import JobType
 from .job_schedule import JobSchedule
+from .shift import Shift
+from .job_day import JobDay
 
 class JobOffer(SQLModel, table=True):
     __tablename__="oferta"
@@ -46,6 +48,12 @@ class JobOffer(SQLModel, table=True):
     # Job Schedule Relationship
     schedule_id: int | None = Field(foreign_key="horario_jornada.id_horario", default=None, sa_column_kwargs={"name": "id_horario"})
     job_schedule: JobSchedule | None = Relationship(back_populates="job_offers")
+    # Shift Relationship
+    shift_id: int | None = Field(foreign_key="turnos.id_turno", default=None, sa_column_kwargs={"name": "id_turno"})
+    shift: Shift | None = Relationship(back_populates="job_offers")
+    # JobDay Relationship
+    day_id: int | None = Field(foreign_key="dias_laborales.id_dia", default=None, sa_column_kwargs={"name": "id_dia"})
+    job_day: JobDay | None = Relationship(back_populates="job_offers")
     # Job Question Relationship
     job_questions: list["JobQuestion"] = Relationship(back_populates="job_offer")
     # Postulation Relationship

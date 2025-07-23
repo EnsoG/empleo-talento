@@ -66,18 +66,19 @@ export const FeaturedEducation = () => {
             <Skeleton
                 height="100%"
                 visible={isLoading}>
-                <Text
-                    style={{ whiteSpace: 'pre-wrap', wordBreak: "break-word" }}
-                    size="sm"
-                    lineClamp={3}>
-                    {data?.featured_study ??
-                        <Alert
-                            title="Sin estudio destacado"
-                            icon={<Info />}>
-                            No se ha encontrado ningun estudio destacado registrado
-                        </Alert>
-                    }
-                </Text>
+                {data?.featured_study
+                    ? <Text
+                        style={{ whiteSpace: 'pre-wrap', wordBreak: "break-word" }}
+                        size="sm"
+                        lineClamp={3}>
+                        data.featured_study
+                    </Text>
+                    : <Alert
+                        title="Sin estudio destacado"
+                        icon={<Info />}>
+                        No se ha encontrado ningun estudio destacado registrado
+                    </Alert>
+                }
             </Skeleton>
         </>
     )

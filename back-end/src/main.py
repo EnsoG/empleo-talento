@@ -22,6 +22,14 @@ from routers import (
     publications,
     softwares,
     job_schedules,
+    candidate_plans,
+    company_plans,
+    languages,
+    company_sectors,
+    certification_types,
+    performance_areas,
+    role_positions,
+    generic_positions,
     metadata
 )
 
@@ -66,4 +74,12 @@ app.include_router(postulations.router, prefix="/v1")
 app.include_router(publications.router, prefix="/v1")
 app.include_router(softwares.router, prefix="/v1")
 app.include_router(job_schedules.router, prefix="/v1")
+app.include_router(candidate_plans.router, prefix="/v1")
+app.include_router(company_plans.router, prefix="/v1")
+app.include_router(languages.router, prefix="/v1")
+app.include_router(company_sectors.router, prefix="/v1")
+app.include_router(certification_types.router, prefix="/v1")
+app.include_router(performance_areas.router, prefix="/v1")
+app.include_router(role_positions.router, prefix="/v1")
+app.include_router(generic_positions.router, prefix="/v1")
 app.include_router(metadata.router, prefix="/v1")

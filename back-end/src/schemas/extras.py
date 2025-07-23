@@ -1,3 +1,4 @@
+from fastapi import UploadFile
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 from enum import IntEnum, Enum
 
@@ -196,6 +197,38 @@ class BaseExtras(BaseModel):
         str_strip_whitespace=True,
         extra="forbid"
     )
+
+class GetPlan(BaseModel):
+    plan_id: int
+    name: str
+    value: int
+    description: str | None = None
+    state: PlanStateEnum
+    photo: str | None = None
+
+class CreatePlan(BaseExtras):
+    name: str
+    value: int
+    description: str | None = None
+    state: PlanStateEnum
+
+    @field_validator("name", "description")
+    def non_empty_string(cls, value: str) -> str:
+        if not validate_empty_string(value):
+            raise ValueError("Field cannot be an empty string")
+        return value
+
+class UpdatePlan(BaseExtras):
+    name: str
+    value: int
+    description: str | None = None
+    state: PlanStateEnum
+
+    @field_validator("name", "description")
+    def non_empty_string(cls, value: str) -> str:
+        if not validate_empty_string(value):
+            raise ValueError("Field cannot be an empty string")
+        return value
 
 class RequestResetPassword(BaseExtras):
     email: EmailStr

@@ -23,7 +23,9 @@ export const Contact = () => {
     return (
         <PortalLayout>
             <PortalBanner title="Contacto" />
-            <Box id="contact">
+            <Box
+                className="portal-section"
+                component="section">
                 <Container size="xl">
                     <Title
                         order={2}

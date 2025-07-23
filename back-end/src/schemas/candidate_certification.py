@@ -1,14 +1,11 @@
 from pydantic import BaseModel, ConfigDict, ValidationInfo, conint, field_validator
 from datetime import date
 
+from .certification_type import GetCertificationType
 from utilities import (
     validate_earlier_date,
     validate_empty_string
 )
-
-class GetCertificationType(BaseModel):
-    certification_type_id: int
-    name: str
 
 class BaseCertification(BaseModel):
     model_config = ConfigDict(

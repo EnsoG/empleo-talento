@@ -497,14 +497,6 @@ async def initialize_db():
                 knownledge_level.KnownledgeLevel(name="Avanzado"),
                 knownledge_level.KnownledgeLevel(name="Experto")
             ]
-            # Language Level Table
-            language_leves = [
-                language_level.LanguageLevel(name="Básico"),
-                language_level.LanguageLevel(name="Intermedio"),
-                language_level.LanguageLevel(name="Avanzado"),
-                language_level.LanguageLevel(name="Nativo"),
-                language_level.LanguageLevel(name="Bilingüe")
-            ]
             # Language Table
             languages = [
                 language.Language(name="Español"),
@@ -517,6 +509,14 @@ async def initialize_db():
                 language.Language(name="Japonés"),
                 language.Language(name="Coreano"),
                 language.Language(name="Ruso")
+            ]
+            # Language Level Table
+            language_leves = [
+                language_level.LanguageLevel(name="Básico"),
+                language_level.LanguageLevel(name="Intermedio"),
+                language_level.LanguageLevel(name="Avanzado"),
+                language_level.LanguageLevel(name="Nativo"),
+                language_level.LanguageLevel(name="Bilingüe")
             ]
             # Certification Type Table
             certification_types = [
@@ -556,8 +556,8 @@ async def initialize_db():
                 categories +
                 contract_types +
                 knownledge_levels +
-                language_leves +
                 languages +
+                language_leves +
                 certification_types +
                 driver_licenses +
                 role_positions +

@@ -10,6 +10,7 @@ import { useModal } from "../../../hooks/useModal";
 import { PanelPostulation } from "../../../types";
 import { PostulationAnswers } from "./PostulationAnswers";
 import { PostulationStateForm } from "./PostulationStateForm";
+import { endpoints } from "../../../endpoints";
 
 
 interface PostulationTrProps {
@@ -21,6 +22,34 @@ interface PostulationTrProps {
 export const PostulationTr = ({ postulation, allowUpdateState = true, onGetPostulations }: PostulationTrProps) => {
     const { openModal } = useModal();
     const fullName = `${postulation.candidate.name} ${postulation.candidate.paternal} ${postulation.candidate.maternal ? postulation.candidate.maternal : ""}`;
+
+    const getResume = async () => {
+        try {
+            const response = await fetch(`${endpoints.getResume}/${postulation.candidate.candidate_id}`, {
+                method: "GET",
+                credentials: "include"
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al obtener el CV");
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `cv_${postulation.candidate.candidate_id}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+
+            // Limpieza
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <Table.Tr>
@@ -49,7 +78,7 @@ export const PostulationTr = ({ postulation, allowUpdateState = true, onGetPostu
                                 Actualizar Estado
                             </Menu.Item>
                         }
-                        <Menu.Item>
+                        <Menu.Item onClick={getResume}>
                             Ver CV
                         </Menu.Item>
                         {(postulation.job_answers.length != 0) &&

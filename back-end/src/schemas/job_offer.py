@@ -86,19 +86,15 @@ class CreateOffer(BaseJobOffer):
     city_id: conint(gt=0) | None = None
     type_id: conint(gt=0) | None = None
     schedule_id: conint(gt=0) | None = None
-    job_type: str | None = None
-    shift: str | None = None
-    job_day: str | None = None
+    job_type_id: conint(gt=0) | None = None
+    shift_id: conint(gt=0) | None = None
+    day_id: conint(gt=0) | None = None
 
     @model_validator(mode="after")
     def validate_create_offer(self) -> "CreateOffer":
         # Check Generic Position Id And Position
         if self.generic_position_id and not self.position:
             raise ValueError("Position field must be on the request if generic position is included")
-        # Check Job Type Relationed Fields
-        field_count = [self.job_type, self.shift, self.job_day].count(None)
-        if field_count > 0 and field_count < 3:
-            raise ValueError("If one of the job type associated field is in the request, all need to be included")
         return self
 
     @field_validator("title", "position", "description", "requirements", "years_experience", "location")
@@ -126,7 +122,10 @@ class UpdateOffer(BaseJobOffer):
     city_id: conint(gt=0) | None = None
     company_id: conint(gt=0) | None = None
     type_id: conint(gt=0) | None = None
+    schedule_id: conint(gt=0) | None = None
     job_type_id: conint(gt=0) | None = None
+    shift_id: conint(gt=0) | None = None
+    day_id: conint(gt=0) | None = None
 
     @field_validator("title", "description", "requirements", "years_experience", "location")
     def non_empty_string(cls, value: str) -> str:

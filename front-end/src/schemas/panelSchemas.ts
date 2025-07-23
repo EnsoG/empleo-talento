@@ -44,9 +44,9 @@ export const publishJobOneSchema = z.object({
     region: regionValidation,
     city_id: cityValidation,
     type_id: typeValidation,
-    job_type: z.string().transform((value) => emptyStringToNull(value)).nullable(),
-    shift: z.string().transform((value) => emptyStringToNull(value)).nullable(),
-    job_day: z.string().transform((value) => emptyStringToNull(value)).nullable(),
+    job_type_id: z.string().transform((value) => Number(value)).nullable(),
+    shift_id: z.string().transform((value) => Number(value)).nullable(),
+    day_id: z.string().transform((value) => Number(value)).nullable(),
     schedule_id: z.string().transform((value) => Number(value)).nullable()
 });
 
@@ -73,19 +73,6 @@ export const publishJobFullSchema = publishJobOneSchema.merge(publishJobTwoSchem
                 path: ["closing_date"],
                 message: "La fecha de cierre debe ser mayor a la fecha de publicacion"
             });
-        }
-        // Check Job Type Validation, All Or Nothing
-        const fields = ["job_type", "shift", "job_day"] as const;
-        const definedFields = fields.filter(field => data[field] !== null && data[field] !== undefined);
-        if (definedFields.length > 0 && definedFields.length < fields.length) {
-            const missingFields = fields.filter(field => data[field] === null || data[field] === undefined);
-            for (const field of missingFields) {
-                ctx.addIssue({
-                    code: "custom",
-                    path: [field],
-                    message: "Este campo es obligatorio si los demás campos relacionados a 'Tipo Jornada' están definidos"
-                });
-            }
         }
     });
 
@@ -168,6 +155,61 @@ export const softwareSchema = z.object({
     name: z.string().nonempty({ message: "El nombre es obligatorio" })
 });
 
+export const languageSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const rolePositionSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const genericPositionSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" }),
+    role_id: z.string().nonempty({ message: "Seleccionar el rol de cargo es obligatorio" }).transform((value) => Number(value))
+});
+
+export const companySectorSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const certificationTypeSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const performanceAreaSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const contractTypeSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const jobTypeSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const shiftSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
 export const scheduleSchema = z.object({
     name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const jobDaySchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" })
+});
+
+export const planSchema = z.object({
+    name: z.string().nonempty({ message: "El nombre es obligatorio" }),
+    value: z.number({ required_error: "El valor del plan es obligatorio" }).gt(0, { message: "El valor del plan debe ser mayor a 0" }),
+    description: z.string().transform((value) => emptyStringToNull(value)).nullable(),
+    state: z.string().nonempty({ message: "El estado del plan es obligatorio" }),
+    photo: z.instanceof(File).nullable()
+        .refine((file) => file === null || file.size <= 1 * 1024 ** 2, {
+            message: "El archivo debe pesar menos de 1MB",
+        })
+        .refine((file) => file === null || file.type === "image/jpeg", {
+            message: "Solo se permiten imágenes JPEG",
+        }),
 });

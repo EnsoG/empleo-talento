@@ -7,12 +7,13 @@ import {
     Card,
     Group,
     LoadingOverlay,
+    Skeleton,
     Stepper
 } from "@mantine/core";
 import { Plus } from "@phosphor-icons/react";
 
 import { useFetch } from "../../hooks/useFetch";
-import { AppPaths, GenericPosition, PerformanceArea } from "../../types";
+import { AppPaths, ContractTypes, GenericPositions, JobDays, JobSchedules, JobTypes, PerformanceAreas, Shifts } from "../../types";
 import { endpoints } from "../../endpoints";
 import { getTomorrowDate, removeDateTime } from "../../utilities";
 import { publishJobFullSchema, publishJobOneSchema, publishJobTwoSchema } from "../../schemas/panelSchemas";
@@ -25,8 +26,13 @@ type PublishJobFormType = z.infer<typeof publishJobFullSchema>;
 export const PublishJob = () => {
     const navigate = useNavigate();
     const { isLoading, fetchData } = useFetch();
-    const { data: positions, fetchData: fetchPositions } = useFetch<GenericPosition[]>();
-    const { data: areas, fetchData: fetchAreas } = useFetch<PerformanceArea[]>();
+    const { data: positions, isLoading: positionsLoading, fetchData: fetchPositions } = useFetch<GenericPositions>();
+    const { data: areas, isLoading: areasLoading, fetchData: fetchAreas } = useFetch<PerformanceAreas>();
+    const { data: schedules, isLoading: schedulesLoading, fetchData: fetchSchedules } = useFetch<JobSchedules>();
+    const { data: jobType, isLoading: jobTypeLoading, fetchData: fetchJobType } = useFetch<JobTypes>();
+    const { data: contractType, isLoading: contractLoading, fetchData: fetchContracts } = useFetch<ContractTypes>();
+    const { data: shift, isLoading: shiftLoading, fetchData: fetchShifts } = useFetch<Shifts>();
+    const { data: jobDay, isLoading: jobDayLoading, fetchData: fetchJobDays } = useFetch<JobDays>();
     const [active, setActive] = useState<number>(0);
     const form = useForm<PublishJobFormType>({
         mode: "controlled",
@@ -46,9 +52,9 @@ export const PublishJob = () => {
             region: "",
             city_id: null,
             type_id: null,
-            job_type: null,
-            shift: null,
-            job_day: null,
+            job_type_id: null,
+            shift_id: null,
+            day_id: null,
             schedule_id: null,
             questions: []
         },
@@ -94,19 +100,42 @@ export const PublishJob = () => {
 
     const prevStep = () => setActive((current) => current - 1);
 
-    const getPositions = async () => await fetchPositions(endpoints.getGenericPositions, {
-        method: "GET",
-        credentials: "include"
+    const getPositions = async () => await fetchPositions(endpoints.genericPositions, {
+        method: "GET"
     });
 
-    const getAreas = async () => await fetchAreas(endpoints.getPerformanceAreas, {
-        method: "GET",
-        credentials: "include"
+    const getAreas = async () => await fetchAreas(endpoints.performanceAreas, {
+        method: "GET"
+    });
+
+    const getSchedules = async () => await fetchSchedules(endpoints.jobSchedules, {
+        method: "GET"
+    });
+
+    const getJobTypes = async () => await fetchJobType(endpoints.jobTypes, {
+        method: "GET"
+    });
+
+    const getContractTypes = async () => await fetchContracts(endpoints.contractTypes, {
+        method: "GET"
+    });
+
+    const getShifts = async () => await fetchShifts(endpoints.shifts, {
+        method: "GET"
+    });
+
+    const getJobDays = async () => await fetchJobDays(endpoints.jobDays, {
+        method: "GET"
     });
 
     useEffect(() => {
         getPositions();
         getAreas();
+        getSchedules();
+        getJobTypes();
+        getContractTypes();
+        getShifts();
+        getJobDays();
     }, []);
 
     return (
@@ -117,32 +146,47 @@ export const PublishJob = () => {
                 p="lg"
                 shadow="sm"
                 withBorder>
-                <LoadingOverlay visible={isLoading} />
-                <Stepper
-                    active={active}
-                    mb="md">
-                    <Stepper.Step label="Paso 1" description="Informacion">
-                        <PublishJobFormOne
-                            form={form}
-                            positions={positions ?? []}
-                            areas={areas ?? []} />
-                    </Stepper.Step>
-                    <Stepper.Step label="Paso 2" description="Preguntas">
-                        <PublishJobFormTwo form={form} />
-                    </Stepper.Step>
-                </Stepper>
-                <Group justify="flex-end">
-                    {active !== 0 &&
-                        <Button onClick={prevStep}>
-                            Volver
-                        </Button>
-                    }
-                    {active < 2 &&
-                        <Button onClick={nextStep}>
-                            {active === 1 ? "Publicar" : "Siguiente"}
-                        </Button>
-                    }
-                </Group>
+                <Skeleton visible={
+                    positionsLoading ||
+                    areasLoading ||
+                    schedulesLoading ||
+                    jobTypeLoading ||
+                    contractLoading ||
+                    shiftLoading ||
+                    jobDayLoading
+                }>
+                    <LoadingOverlay visible={isLoading} />
+                    <Stepper
+                        active={active}
+                        mb="md">
+                        <Stepper.Step label="Paso 1" description="Informacion">
+                            <PublishJobFormOne
+                                form={form}
+                                positions={positions?.generic_positions ?? []}
+                                performanceAreas={areas?.performance_areas ?? []}
+                                jobSchedules={schedules?.job_schedules ?? []}
+                                jobTypes={jobType?.job_types ?? []}
+                                contractTypes={contractType?.contract_types ?? []}
+                                shifts={shift?.shifts ?? []}
+                                jobDays={jobDay?.job_days ?? []} />
+                        </Stepper.Step>
+                        <Stepper.Step label="Paso 2" description="Preguntas">
+                            <PublishJobFormTwo form={form} />
+                        </Stepper.Step>
+                    </Stepper>
+                    <Group justify="flex-end">
+                        {active !== 0 &&
+                            <Button onClick={prevStep}>
+                                Volver
+                            </Button>
+                        }
+                        {active < 2 &&
+                            <Button onClick={nextStep}>
+                                {active === 1 ? "Publicar" : "Siguiente"}
+                            </Button>
+                        }
+                    </Group>
+                </Skeleton>
             </Card>
         </PanelLayout>
     )

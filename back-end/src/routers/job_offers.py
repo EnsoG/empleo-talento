@@ -206,10 +206,7 @@ async def create_offer(
     try:
         base_data = data.model_dump(exclude={
             "questions",
-            "generic_position_id",
-            "job_type",
-            "shift",
-            "job_day"
+            "generic_position_id"
          })
         # Check Position And Generic Position
         if data.generic_position_id:
@@ -229,20 +226,6 @@ async def create_offer(
             await session.flush()
             base_data["position"] = None
             base_data["specific_position_id"]= specific_position.specific_position_id
-        # Check Job Type And Associated Fields
-        if data.job_type:
-            # Create Job Type
-            job_type = JobType(name=data.job_type)
-            session.add(job_type)
-            await session.flush()
-            # Create Shift
-            shift = Shift(name=data.shift, job_type_id=job_type.job_type_id)
-            session.add(shift)
-            await session.flush()
-            # Create Job Day
-            job_day = JobDay(name=data.job_day, shift_id=shift.shift_id)
-            session.add(job_day)
-            await session.flush()
         # Generate Next Job Offer Code
         result = await session.execute(select(func.count(JobOffer.offer_id)))
         count = result.scalar()
@@ -252,8 +235,7 @@ async def create_offer(
             **base_data,
             code= (1000 + count) + today.year + today.month + today.day,
             state=OfferStateEnum.pending,
-            featured=OfferFeaturedEnum.not_featured,
-            job_type_id=job_type.job_type_id if data.job_type else None
+            featured=OfferFeaturedEnum.not_featured
         )
         # Get Company User To Get Company Id And Add It In Job Offer
         if current_user.get("user_role") == UserRoleEnum.company_user:

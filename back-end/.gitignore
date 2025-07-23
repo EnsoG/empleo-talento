@@ -3,7 +3,8 @@
 
 # Enviroment Variables
 .env
-.venv/*
+.venv/
+
 # Upload Directory
 src/uploads/*
 

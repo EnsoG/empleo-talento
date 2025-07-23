@@ -1,19 +1,37 @@
+import { useNavigate } from "react-router";
 import { Button, Menu } from "@mantine/core";
 import { CaretDown } from "@phosphor-icons/react";
 
-import { AppPaths } from "../../types";
+import { useAuth } from "../../hooks/useAuth";
+import { AppPaths, UserRole } from "../../types";
 
-export type NavItemData = {
+export interface NavItemProps {
     name: string;
     to: AppPaths | "";
-    options?: { name: string; to: AppPaths | "" }[];
+    options?: {
+        name: string;
+        to: AppPaths | "";
+        roles?: UserRole[];
+    }[];
+    roles?: UserRole[];
 };
 
-export interface NavItemProps extends NavItemData {
-    onNavigate: (to: NavItemProps["to"]) => void,
-}
+export const NavItem = ({ name, to, options }: NavItemProps) => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
-export const NavItem = ({ name, to, onNavigate, options }: NavItemProps) => {
+    const visibleNestedNavItems = () => {
+        if (options) {
+            return options.filter(item => {
+                if (!item.roles) return true;
+                // Filter NavItems By User Role
+                if (user?.user_role == undefined || user?.user_role == null) return false;
+                if (item.roles) return item.roles.includes(user.user_role);
+            });
+        }
+        return [];
+    }
+
     return (
         <Menu
             classNames={{ dropdown: "nav-item-dropdown" }}
@@ -29,17 +47,17 @@ export const NavItem = ({ name, to, onNavigate, options }: NavItemProps) => {
                     variant="transparent"
                     color="gray"
                     rightSection={options && <CaretDown />}
-                    onClick={() => onNavigate(to)}>
+                    onClick={() => navigate(to)}>
                     {name}
                 </Button>
             </Menu.Target>
             {options &&
                 <Menu.Dropdown mt="lg">
                     {
-                        options.map(({ name, to }) => (
+                        visibleNestedNavItems().map(({ name, to }) => (
                             <Menu.Item
                                 key={name}
-                                onClick={() => onNavigate(to)}>
+                                onClick={() => navigate(to)}>
                                 {name}
                             </Menu.Item>
                         ))

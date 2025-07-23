@@ -47,7 +47,7 @@ export const LanguageItem = ({ language, onGetLanguages }: LanguageItemProps) =>
                         onClick={() => openModal(
                             <LanguageForm
                                 type="update"
-                                language={{
+                                candidateLanguage={{
                                     candidate_language_id: language.candidate_language_id,
                                     language_level: language.language_level
                                 }}

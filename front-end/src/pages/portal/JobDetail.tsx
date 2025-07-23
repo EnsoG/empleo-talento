@@ -47,7 +47,9 @@ export const JobDetail = () => {
     return (
         <PortalLayout>
             <PortalBanner title="Detalle Empleo" />
-            <Box id="job-detail">
+            <Box
+                className="portal-section"
+                component="section">
                 <Container size="xl">
                     <Skeleton
                         height="100%"

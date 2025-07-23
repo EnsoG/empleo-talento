@@ -18,7 +18,7 @@ import { Info, ListBullets } from "@phosphor-icons/react";
 
 import { useMetadata } from "../../../hooks/useMetadata";
 import { useFetch } from "../../../hooks/useFetch";
-import { City, Offer, OfferFeaturedState, offerFeaturedStates, OfferState, PerformanceArea } from "../../../types";
+import { City, Offer, OfferFeaturedState, offerFeaturedStates, OfferState, PerformanceAreas } from "../../../types";
 import { CLPFormatter, parseDateToLocal, removeDateTime } from "../../../utilities";
 import { updateJobSchema } from "../../../schemas/panelSchemas";
 import { CardSection } from "../../CardSection";
@@ -32,7 +32,7 @@ interface JobInfoProps {
 export const JobInfo = ({ offer, onGetOffer }: JobInfoProps) => {
     const { metadata } = useMetadata();
     const { data: cities, isLoading: citiesLoading, fetchData: fetchCities } = useFetch<City[]>();
-    const { data: areas, isLoading: areasLoading, fetchData: fetchAreas } = useFetch<PerformanceArea[]>();
+    const { data: areas, isLoading: areasLoading, fetchData: fetchAreas } = useFetch<PerformanceAreas>();
     const { isLoading, fetchData } = useFetch();
     const [region, setRegion] = useState<string | null>(offer.city ? String(offer.city.region.number_region) : null);
     const form = useForm({
@@ -57,7 +57,7 @@ export const JobInfo = ({ offer, onGetOffer }: JobInfoProps) => {
         credentials: "include"
     });
 
-    const getAreas = async () => await fetchAreas(endpoints.getPerformanceAreas, {
+    const getAreas = async () => await fetchAreas(endpoints.performanceAreas, {
         method: "GET"
     });
 
@@ -231,7 +231,7 @@ export const JobInfo = ({ offer, onGetOffer }: JobInfoProps) => {
                                         <Select
                                             label="Area Desempeño"
                                             placeholder="Selecione el area de desempeño"
-                                            data={areas?.map((a) => ({
+                                            data={areas.performance_areas.map((a) => ({
                                                 value: String(a.area_id),
                                                 label: a.name
                                             }))}

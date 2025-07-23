@@ -32,7 +32,10 @@ export const AboutUs = () => {
     return (
         <PortalLayout>
             <PortalBanner title="Nosotros" />
-            <Box id="about-us">
+            <Box
+                id="about-us"
+                className="portal-section"
+                component="section">
                 <Container size="xl">
                     <Title
                         order={2}

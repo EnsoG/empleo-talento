@@ -15,12 +15,13 @@ import { useMetadata } from "../../../hooks/useMetadata";
 import { useFetch } from "../../../hooks/useFetch";
 import {
     City,
+    ContractType,
     GenericPosition,
-    jobDays,
-    JobSchedules,
-    jobTypes,
+    JobDay,
+    JobSchedule,
+    JobType,
     PerformanceArea,
-    shifts
+    Shift
 } from "../../../types";
 import { endpoints } from "../../../endpoints";
 import { publishJobFullSchema } from "../../../schemas/panelSchemas";
@@ -28,30 +29,26 @@ import { publishJobFullSchema } from "../../../schemas/panelSchemas";
 interface PublishJobFormOneProps {
     form: UseFormReturnType<z.infer<typeof publishJobFullSchema>>;
     positions: GenericPosition[];
-    areas: PerformanceArea[];
+    performanceAreas: PerformanceArea[];
+    jobSchedules: JobSchedule[];
+    jobTypes: JobType[];
+    contractTypes: ContractType[];
+    shifts: Shift[];
+    jobDays: JobDay[];
 }
 
-export const PublishJobFormOne = ({ form, positions, areas }: PublishJobFormOneProps) => {
+export const PublishJobFormOne = ({ form, positions, jobSchedules, performanceAreas, jobTypes, contractTypes, shifts, jobDays }: PublishJobFormOneProps) => {
     const { metadata } = useMetadata();
     const { data: cities, isLoading: citiesLoading, fetchData: fetchCities } = useFetch<City[]>();
-    const { data: schedules, isLoading: schedulesLoading, fetchData: fetchSchedules } = useFetch<JobSchedules>();
 
     const getCities = async () => await fetchCities(`${endpoints.getCities}?region=${form.values.region}`, {
         method: "GET",
         credentials: "include"
     });
 
-    const getSchedules = async () => await fetchSchedules(endpoints.jobSchedules, {
-        method: "GET"
-    });
-
     useEffect(() => {
         if (form.values.region != "" && form.values.region != null) getCities();
     }, [form.values.region]);
-
-    useEffect(() => {
-        getSchedules();
-    }, []);
 
     return (
         <Stack>
@@ -136,7 +133,7 @@ export const PublishJobFormOne = ({ form, positions, areas }: PublishJobFormOneP
             <Select
                 label="Area Desempeño"
                 placeholder="Selecione el area de desempeño"
-                data={areas?.map((a) => ({
+                data={performanceAreas?.map((a) => ({
                     value: String(a.area_id),
                     label: a.name
                 }))}
@@ -170,7 +167,7 @@ export const PublishJobFormOne = ({ form, positions, areas }: PublishJobFormOneP
             <Select
                 label="Tipo Contrato"
                 placeholder="Selecione el tipo de contrato"
-                data={metadata.contract_types?.map((c) => ({
+                data={contractTypes?.map((c) => ({
                     value: String(c.type_id),
                     label: c.name
                 }))}
@@ -181,35 +178,43 @@ export const PublishJobFormOne = ({ form, positions, areas }: PublishJobFormOneP
             <Select
                 label="Tipo Jornada"
                 placeholder="Selecione el tipo de jornada"
-                data={jobTypes}
-                key={form.key("job_type")}
-                {...form.getInputProps("job_type")}
+                data={jobTypes?.map((t) => ({
+                    value: String(t.job_type_id),
+                    label: t.name
+                }))}
+                key={form.key("job_type_id")}
+                {...form.getInputProps("job_type_id")}
                 searchable
                 clearable />
             <Select
                 label="Turno"
                 placeholder="Selecione el turno"
-                data={shifts}
-                key={form.key("shift")}
-                {...form.getInputProps("shift")}
+                data={shifts?.map((s) => ({
+                    value: String(s.shift_id),
+                    label: s.name
+                }))}
+                key={form.key("shift_id")}
+                {...form.getInputProps("shift_id")}
                 searchable
                 clearable />
             <Select
                 label="Dias Laborales"
                 placeholder="Selecione los dias laborales"
-                data={jobDays}
-                key={form.key("job_day")}
-                {...form.getInputProps("job_day")}
+                data={jobDays?.map((d) => ({
+                    value: String(d.day_id),
+                    label: d.name
+                }))}
+                key={form.key("day_id")}
+                {...form.getInputProps("day_id")}
                 searchable
                 clearable />
             <Select
                 label="Horario Jornada"
                 placeholder="Selecione el horario de jornada"
-                data={schedules?.job_schedules.map((s) => ({
+                data={jobSchedules.map((s) => ({
                     value: String(s.schedule_id),
                     label: s.name
                 }))}
-                disabled={schedulesLoading}
                 key={form.key("schedule_id")}
                 {...form.getInputProps("schedule_id")}
                 searchable

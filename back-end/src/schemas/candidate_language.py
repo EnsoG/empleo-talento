@@ -1,8 +1,6 @@
 from pydantic import BaseModel, ConfigDict, conint
 
-class GetLanguage(BaseModel):
-    language_id: int
-    name: str
+from .language import GetLanguage
 
 class GetLanguageLevel(BaseModel):
     level_id: int

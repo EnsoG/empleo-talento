@@ -4,17 +4,18 @@ import {
     Button,
     LoadingOverlay,
     Select,
+    Skeleton,
     Stack,
     TextInput
 } from "@mantine/core";
 
-import { useMetadata } from "../../../hooks/useMetadata";
 import { useFetch } from "../../../hooks/useFetch";
 import { useModal } from "../../../hooks/useModal";
-import { CandidateCertification } from "../../../types";
+import { CandidateCertification, CertificationTypes } from "../../../types";
 import { parseDateToLocal } from "../../../utilities";
 import { profileCertificationSchema } from "../../../schemas/portalSchemas";
 import { endpoints } from "../../../endpoints";
+import { useEffect } from "react";
 
 interface CertificationFormProps {
     type: "create" | "update";
@@ -23,9 +24,9 @@ interface CertificationFormProps {
 }
 
 export const CertificationForm = ({ type, certification, onGetCertifications }: CertificationFormProps) => {
-    const { metadata } = useMetadata();
-    const { isLoading, fetchData } = useFetch();
     const { closeModal } = useModal();
+    const { isLoading, fetchData } = useFetch();
+    const { data, isLoading: certTypesLoading, fetchData: fetchCertTypes } = useFetch<CertificationTypes>();
     const form = useForm({
         mode: "uncontrolled",
         initialValues: {
@@ -34,9 +35,13 @@ export const CertificationForm = ({ type, certification, onGetCertifications }: 
             description: certification?.description ?? "",
             obtained_date: certification?.obtained_date ? parseDateToLocal(certification?.obtained_date) : null,
             expiration_date: certification?.expiration_date ? parseDateToLocal(certification?.expiration_date) : null,
-            certification_type_id: certification?.certification_type.certification_type_id ? String(certification?.certification_type.certification_type_id) : ""
+            certification_type_id: certification?.certification_type ? String(certification.certification_type.certification_type_id) : ""
         },
         validate: zodResolver(profileCertificationSchema)
+    });
+
+    const getCertificationsTypes = async () => await fetchCertTypes(endpoints.certificationTypes, {
+        method: "GET"
     });
 
     const handleSubmit = async (values: typeof form.values) => {
@@ -58,6 +63,10 @@ export const CertificationForm = ({ type, certification, onGetCertifications }: 
         await onGetCertifications();
         closeModal();
     }
+
+    useEffect(() => {
+        getCertificationsTypes();
+    }, []);
 
     return (
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -95,16 +104,22 @@ export const CertificationForm = ({ type, certification, onGetCertifications }: 
                     key={form.key("expiration_date")}
                     {...form.getInputProps("expiration_date")}
                     clearable />
-                <Select
-                    label="Tipo Certificacion"
-                    placeholder="Seleccione el tipo de certificacion"
-                    data={metadata.certification_types.map((c) => ({
-                        value: String(c.certification_type_id),
-                        label: c.name
-                    }))}
-                    key={form.key("certification_type_id")}
-                    {...form.getInputProps("certification_type_id")}
-                    withAsterisk />
+                <Skeleton visible={certTypesLoading}>
+                    {(data) &&
+                        < Select
+                            label="Tipo Certificacion"
+                            placeholder="Seleccione el tipo de certificacion"
+                            data={data?.certification_types.map((c) => ({
+                                value: String(c.certification_type_id),
+                                label: c.name
+                            }))}
+                            disabled={certTypesLoading}
+                            key={form.key("certification_type_id")}
+                            {...form.getInputProps("certification_type_id")}
+                            searchable
+                            withAsterisk />
+                    }
+                </Skeleton>
                 <Button type="submit">{(type == "create") ? "Agregar" : "Actualizar"}</Button>
             </Stack>
         </form>

@@ -32,6 +32,7 @@ export const Home = () => {
             {/* Hero Banner Section */}
             <Box
                 id="home-banner"
+                className="portal-section"
                 component="section"
                 mb="xl">
                 <Container size="xl">
@@ -67,7 +68,7 @@ export const Home = () => {
             </Box>
             {/* Featured Jobs Section */}
             <Box
-                id="home-featured-jobs"
+                className="portal-section"
                 component="section">
                 <Container size="xl">
                     <Title
@@ -104,6 +105,7 @@ export const Home = () => {
             {/* Last Jobs Section */}
             <Box
                 id="home-last-jobs"
+                className="portal-section"
                 component="section"
                 mb={64}>
                 <Container size="xl">
@@ -142,6 +144,7 @@ export const Home = () => {
             {/* Contact Section */}
             <Box
                 id="home-contact"
+                className="portal-section"
                 component="section">
                 <Container size="xl">
                     <Grid gutter="xl">

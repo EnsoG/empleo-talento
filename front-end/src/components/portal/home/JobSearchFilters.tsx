@@ -10,7 +10,7 @@ import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useFetch } from "../../../hooks/useFetch";
 import { useMetadata } from "../../../hooks/useMetadata";
 import { endpoints } from "../../../endpoints";
-import { AppPaths, City, jobTypes } from "../../../types";
+import { AppPaths, City } from "../../../types";
 import { useModal } from "../../../hooks/useModal";
 
 interface JobSearchFiltersProps {
@@ -25,9 +25,7 @@ export const JobSearchFilters = ({ searchParam }: JobSearchFiltersProps) => {
     const [filters, setFilters] = useState<{ [key: string]: string }>({
         search: searchParam,
         region: "",
-        city: "",
-        contract: "",
-        job_type: ""
+        city: ""
     });
 
     const updateFilter = (key: string, value: string) => {
@@ -83,27 +81,6 @@ export const JobSearchFilters = ({ searchParam }: JobSearchFiltersProps) => {
                 disabled={!filters.region || citiesLoading}
                 value={filters.city}
                 onChange={(value) => updateFilter("city", value ?? "")}
-                searchable
-                clearable />
-            <Select
-                label="Tipo Contrato"
-                placeholder="Seleccione el tipo de contrato"
-                comboboxProps={{ position: 'bottom', middlewares: { flip: false, shift: false } }}
-                data={metadata.contract_types.map((c) => ({
-                    value: String(c.type_id),
-                    label: c.name
-                }))}
-                value={filters.contract}
-                onChange={(value) => updateFilter("contract", value ?? "")}
-                searchable
-                clearable />
-            <Select
-                label="Jornada"
-                placeholder="Seleccione el tipo de jornada"
-                comboboxProps={{ position: 'bottom', middlewares: { flip: false, shift: false } }}
-                data={jobTypes}
-                value={filters.job_type}
-                onChange={(value) => updateFilter("job_type", value ?? "")}
                 searchable
                 clearable />
             <Button

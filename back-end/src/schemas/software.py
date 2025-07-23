@@ -25,7 +25,7 @@ class CreateSoftware(BaseSoftware):
         return value
 
 class UpdateSoftware(BaseSoftware):
-    name: str
+    name: str = ""
 
     @field_validator("name")
     def non_empty_string(cls, value: str) -> str:

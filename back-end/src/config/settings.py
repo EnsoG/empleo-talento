@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     smtp_mail_from: str
     jwt_secret_key: str
     front_end_domain: str
+    wkhtmltopdf_exe_path: str
 
     model_config = SettingsConfigDict(env_file=".env")
 

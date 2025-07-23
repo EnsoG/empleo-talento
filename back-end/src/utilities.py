@@ -100,7 +100,7 @@ def validate_phone_format(phone: str | None) -> bool:
 def validate_password(password: str) -> bool:
     return len(password) >= 6 and password.isalnum()
 
-def validate_earlier_date(start_date: date, end_date: date):
+def validate_earlier_date(start_date: date | None, end_date: date | None):
     if start_date is None and end_date is None:
         return True
     if end_date is None:

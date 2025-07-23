@@ -20,16 +20,16 @@ import { CertificationForm } from "./CertificationForm";
 import { CertificationItem } from "./CertificationItem";
 
 export const ProfileCertification = () => {
-    const { data: certifications, isLoading: certsLoading, fetchData: fetchCerts } = useFetch<CandidateCertification[]>();
+    const { data: candCertifications, isLoading: candCertLoading, fetchData: fetchCandCert } = useFetch<CandidateCertification[]>();
     const { openModal } = useModal();
 
-    const getCertifications = async () => await fetchCerts(endpoints.candidateCertifications, {
+    const getCandCertifications = async () => await fetchCandCert(endpoints.candidateCertifications, {
         method: "GET",
         credentials: "include"
     });
 
     useEffect(() => {
-        getCertifications();
+        getCandCertifications();
     }, []);
 
     return (
@@ -45,27 +45,28 @@ export const ProfileCertification = () => {
                     onClick={() => openModal(
                         <CertificationForm
                             type="create"
-                            onGetCertifications={getCertifications} />,
+                            onGetCertifications={getCandCertifications} />,
                         "Agregar Certificado"
-                    )}>
+                    )
+                    }>
                     <Plus />
                 </ActionIcon>
             </Group>
             <Divider my="sm" />
             <Skeleton
                 height="100%"
-                visible={certsLoading}>
+                visible={candCertLoading}>
                 <ScrollArea.Autosize
                     type="auto"
                     pr="md"
                     mah={250}>
                     <Stack>
-                        {(certifications?.length != 0)
-                            ? certifications?.map((c) => (
+                        {(candCertifications?.length != 0)
+                            ? candCertifications?.map((c) => (
                                 <CertificationItem
                                     key={c.certification_id}
                                     certification={c}
-                                    onGetCertifications={getCertifications} />
+                                    onGetCertifications={getCandCertifications} />
                             ))
                             : <Alert
                                 title="Sin certificados registrados"

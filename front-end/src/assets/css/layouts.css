@@ -85,6 +85,12 @@
     width: 100%;
 }
 
+.portal-section {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
 /* 2.- Auth */
 #auth-layout .mantine-Grid-inner:first-of-type {
     height: 100%;

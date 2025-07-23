@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { Select, TextInput } from "@mantine/core";
+import { Select, Skeleton, TextInput } from "@mantine/core";
 
 import { useMetadata } from "../hooks/useMetadata";
 import { useFetch } from "../hooks/useFetch";
-import { City, jobTypes, OfferState } from "../types";
+import { City, ContractTypes, JobTypes, OfferState } from "../types";
 import { endpoints } from "../endpoints";
 
 interface JobFiltersProps {
@@ -16,14 +16,29 @@ interface JobFiltersProps {
 export const JobFilters = ({ filters, showCompanyFilter = false, showJobStateFilter = false, onUpdateFilter }: JobFiltersProps) => {
     const { metadata } = useMetadata();
     const { data: cities, isLoading: citiesLoading, fetchData: fetchCities } = useFetch<City[]>();
+    const { data: jobType, isLoading: jobTypeLoading, fetchData: fetchJobTypes } = useFetch<JobTypes>();
+    const { data: contractType, isLoading: contractLoading, fetchData: fetchContracts } = useFetch<ContractTypes>();
 
     const getCities = async () => await fetchCities(`${endpoints.getCities}?region=${filters.region}`, {
+        method: "GET"
+    });
+
+    const getJobTypes = async () => await fetchJobTypes(endpoints.jobTypes, {
+        method: "GET"
+    });
+
+    const getContracts = async () => await fetchContracts(endpoints.contractTypes, {
         method: "GET"
     });
 
     useEffect(() => {
         if (filters.region != "") getCities();
     }, [filters.region]);
+
+    useEffect(() => {
+        getJobTypes();
+        getContracts();
+    }, [])
 
     return (
         <>
@@ -57,25 +72,36 @@ export const JobFilters = ({ filters, showCompanyFilter = false, showJobStateFil
                 onChange={(value) => onUpdateFilter("city", value ?? "")}
                 searchable
                 clearable />
-            <Select
-                label="Tipo Contrato"
-                placeholder="Seleccione el tipo de contrato"
-                data={metadata.contract_types.map((c) => ({
-                    value: String(c.type_id),
-                    label: c.name
-                }))}
-                value={filters.contract}
-                onChange={(value) => onUpdateFilter("contract", value ?? "")}
-                searchable
-                clearable />
-            <Select
-                label="Tipo Jornada"
-                placeholder="Seleccione el tipo de jornada"
-                data={jobTypes}
-                value={filters.job_type}
-                onChange={(value) => onUpdateFilter("job_type", value ?? "")}
-                searchable
-                clearable />
+            <Skeleton visible={contractLoading}>
+                {(contractType) &&
+                    <Select
+                        label="Tipo Contrato"
+                        placeholder="Seleccione el tipo de contrato"
+                        data={contractType.contract_types.map((c) => ({
+                            value: String(c.type_id),
+                            label: c.name
+                        }))}
+                        value={filters.contract}
+                        onChange={(value) => onUpdateFilter("contract", value ?? "")}
+                        searchable
+                        clearable />
+                }
+            </Skeleton>
+            <Skeleton visible={jobTypeLoading}>
+                {(jobType) &&
+                    <Select
+                        label="Tipo Jornada"
+                        placeholder="Seleccione el tipo de jornada"
+                        data={jobType.job_types.map((t) => ({
+                            value: String(t.job_type_id),
+                            label: t.name
+                        }))}
+                        value={filters.job_type}
+                        onChange={(value) => onUpdateFilter("job_type", value ?? "")}
+                        searchable
+                        clearable />
+                }
+            </Skeleton>
             {(showJobStateFilter) &&
                 <Select
                     label="Tipo Estado"

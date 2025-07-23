@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 
 import { useFetch } from "../../hooks/useFetch";
-import { AppPaths, CompanySector } from "../../types";
+import { AppPaths, CompanySectors } from "../../types";
 import { endpoints } from "../../endpoints";
 import { registerCompanySchema } from "../../schemas/authSchemas";
 import { AuthLayout } from "../../layouts/AuthLayout";
@@ -24,7 +24,7 @@ import { AuthLayout } from "../../layouts/AuthLayout";
 export const RegisterCompany = () => {
     const navigate = useNavigate()
     const { isLoading, isSuccess, fetchData } = useFetch();
-    const { data: sectors, isLoading: sectorsLoading, fetchData: fetchSectors } = useFetch<CompanySector[]>();
+    const { data, isLoading: sectorsLoading, fetchData: fetchSectors } = useFetch<CompanySectors>();
     const form = useForm({
         mode: "uncontrolled",
         initialValues: {
@@ -46,7 +46,7 @@ export const RegisterCompany = () => {
         validate: zodResolver(registerCompanySchema)
     });
 
-    const getSectors = async () => await fetchSectors(endpoints.getCompanySectors, {
+    const getSectors = async () => await fetchSectors(endpoints.companySectors, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -138,13 +138,14 @@ export const RegisterCompany = () => {
                             label="Sector"
                             placeholder="Ingrese su sector"
                             comboboxProps={{ withinPortal: false }}
-                            data={sectors?.map(({ sector_id, name }) => ({
-                                value: String(sector_id),
-                                label: name
+                            data={data?.company_sectors?.map((s) => ({
+                                value: String(s.sector_id),
+                                label: s.name
                             }))}
                             disabled={sectorsLoading}
                             key={form.key("sector")}
                             {...form.getInputProps("sector")}
+                            searchable
                             withAsterisk />
                         <Divider label="Informacion Representante" />
                         <TextInput
