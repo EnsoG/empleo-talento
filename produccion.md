@@ -24,11 +24,6 @@ mysql_secure_installation
 ```sql
 mysql -u root -p
 
-CREATE DATABASE empleatalento;
-CREATE USER 'empleatalento'@'localhost' IDENTIFIED BY 'ET4242Hola_';
-GRANT ALL PRIVILEGES ON empleatalento.* TO 'empleatalento'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
 ```
 
 ## 3. Clonar y Configurar el Proyecto
