@@ -641,6 +641,7 @@ export type Metadata = {
     knownledge_levels: KnowledgeLevel[];
     language_levels: LanguageLevel[];
     regions: Region[];
+    contract_types?: ContractType[];
 }
 
 export type Admin = {
