@@ -1,0 +1,11 @@
+# __pycache_
+*__pycache__
+
+# Enviroment Variables
+.env
+
+# Upload Directory
+src/uploads/*
+
+# Venv Directory
+venv

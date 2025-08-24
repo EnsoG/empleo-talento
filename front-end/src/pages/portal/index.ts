@@ -1,0 +1,13 @@
+export { AboutUs } from "./AboutUs";
+export { CompanyOverview } from "./CompanyOverview";
+export { Contact } from "./Contact";
+export { Home } from "./Home";
+export { JobBoard } from "./JobBoard";
+export { JobDetail } from "./JobDetail";
+export { PersonalInfo } from "./PersonalInfo";
+export { Postulations } from "./Postulations";
+export { ProfesionalInfo } from "./ProfesionalInfo";
+export { PublicationDetail } from "./PublicationDetail";
+export { Publications } from "./Publications";
+export { Services } from "./Services";
+export { TermsPolicies } from "./TermsPolicies";

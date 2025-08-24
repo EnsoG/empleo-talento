@@ -1,0 +1,201 @@
+@import url("./styles.css");
+
+/*
+-= Layouts Index =-
+    1.- Portal
+        1.1- Header
+        1.2- Footer
+        1.3- Banner
+        1.4- Other
+    2.- Auth
+    3.- My Profil
+    4.- Panel
+        4.1- Sidebar
+        4.2- Header
+        4.3- Content
+    X.- Media Queries
+        X.3- Md Queries
+        X.4- Lg Queries
+*/
+
+/* 1.- Portal */
+/* 1.1- Header */
+#portal-header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    background-color: transparent;
+    padding: 40px 64px;
+    transition: background-color 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.nav-drawer .mantine-Drawer-inner {
+    z-index: 999;
+}
+
+#portal-header.scrolled {
+    background-color: var(--mantine-white);
+    padding: 20px 32px;
+    box-shadow: var(--mantine-shadow-sm);
+    transition: background-color 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.nav-item-btn {
+    color: var(--mantine-black);
+}
+
+.nav-item-btn:hover,
+.nav-item-btn[data-expanded=true] {
+    color: var(--mantine-blue-6);
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-item-btn svg {
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-item-btn[data-expanded=true] svg {
+    transform: rotate(180deg);
+}
+
+/* 1.2- Footer */
+#portal-footer {
+    padding: 80px 0px;
+    background-color: var(--mantine-blue-2);
+}
+
+/* 1.3- Banner */
+#portal-banner {
+    position: relative;
+    z-index: 0;
+    height: 600px;
+    background-color: var(--mantine-blue-2);
+}
+
+#portal-banner .mantine-Center-root {
+    padding-top: 250px;
+}
+
+/* 1.4- Other */
+.portal-divider {
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+    width: 100%;
+}
+
+.portal-section {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* 2.- Auth */
+#auth-layout .mantine-Grid-inner:first-of-type {
+    height: 100%;
+}
+
+#auth-layout .mantine-Grid-col:nth-of-type(1) {
+    position: relative;
+    background-color: var(--mantine-blue-2);
+}
+
+#auth-layout .mantine-Card-root:first-of-type {
+    z-index: 2;
+    width: 500px;
+}
+
+#auth-layout .mantine-Grid-col:nth-of-type(2) {
+    background-color: var(--mantine-blue-6);
+}
+
+#auth-img {
+    position: fixed;
+    z-index: 2;
+    animation: move-10-infinite 3s ease-in-out infinite;
+    height: 50%;
+    width: 50%;
+}
+
+.auth-background {
+    position: fixed;
+    z-index: 1;
+    height: 75%;
+    width: 75%;
+    animation: rotate-360-infinite 20s linear infinite;
+}
+
+#auth-divider {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 1;
+    height: 100%;
+    width: 100vh;
+    transform: translateX(-60%) rotate(-90deg);
+}
+
+/* 3.- My Profile */
+#my-profile-layout {
+    position: relative;
+    min-height: auto;
+    padding-bottom: 25%;
+}
+
+/* 4.- Panel */
+/* 4.1- Sidebar */
+#admin-panel-sidebar {
+    position: fixed;
+    z-index: 1;
+    width: 300px;
+    background-color: var(--mantine-white);
+    transition: transform 0.3s ease;
+}
+
+#admin-panel-sidebar.hidden {
+    transform: translateX(-100%);
+}
+
+#admin-panel-sidebar svg {
+    fill: var(--mantine-blue-6);
+}
+
+#sidebar-btn-close {
+    top: 30px;
+    right: 30px;
+    position: fixed;
+}
+
+/* 4.2- Header */
+
+/* 4.3- Content */
+#admin-panel-content {
+    background-color: var(--mantine-gray-1);
+    margin-left: 300px;
+    transition: margin-left 0.3s ease;
+    overflow-y: auto;
+}
+
+#admin-panel-content.shrink {
+    margin-left: 0px;
+}
+
+/* X.- Media Queries */
+/* X.3 Md Queries */
+@media (max-width: 992px) {
+    #admin-panel-sidebar {
+        width: 100%;
+    }
+
+    #admin-panel-content {
+        margin-left: 0;
+    }
+}
+
+/* X.4- Lg Queries */
+@media (max-width: 1200px) {
+    #portal-header {
+        padding: 30px 40px;
+    }
+}

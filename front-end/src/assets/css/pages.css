@@ -1,0 +1,50 @@
+@import url("./styles.css");
+
+/*
+-= Pages Index =-
+    1.- Home
+    2.- Contact
+    3.- Services
+    X.- Not Found
+    X.- Media Queries
+*/
+
+/* 1.- Home */
+#home-banner {
+    z-index: 0;
+    background-color: var(--mantine-blue-2);
+}
+
+#home-banner-img {
+    z-index: 0;
+    animation: move-10-infinite 3s ease-in-out infinite;
+}
+
+#home-last-jobs {
+    z-index: 0;
+    background-color: var(--mantine-blue-2);
+}
+
+#home-contact {
+    z-index: 0;
+}
+
+/* 2.- Contact */
+/* 3.- Services */
+.pricing-card {
+    height: max-content;
+    width: 350px;
+}
+
+#pricing-table .mantine-Table-th {
+    background-color: var(--mantine-blue-6);
+    color: var(--mantine-white);
+}
+
+/* X.- Not Found */
+#not-found {
+    background-color: var(--mantine-blue-2);
+    height: 100%;
+}
+
+/* X.- Media Queries */

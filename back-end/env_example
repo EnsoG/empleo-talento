@@ -1,0 +1,17 @@
+# DataBase Variables
+DB_USERNAME=example
+DB_PASSWORD=example
+DB_HOST=example
+DB_NAME=example
+# SMTP Gmail Service Variables
+SMTP_USERNAME=example
+SMTP_PASSWORD=example
+SMTP_MAIL_FROM=example
+# Contat Email Variables
+CONTACT_RECIPIENT_EMAIL=example
+# JWT Variables
+JWT_SECRET_KEY=example
+# WkhtmlToPDF .exe Path
+WKHTMLTOPDF_EXE_PATH=example
+# CORS Variables
+FRONT_END_DOMAIN=example1
