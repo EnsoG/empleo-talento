@@ -8,12 +8,12 @@ La totalidad del proyecto se enceuntra en este repositorio de git, para obtener 
 
 La primera mediante HTTP:
 ```sh
-git clone https://github.com/cesarom18/empleo-talento.git
+git https://github.com/EnsoG/empleo-talento.git
 ```
 
 Y la segunda mediante credenciales SSH en caso de tenerlo configurado previamente:
 ```sh
-git clone git@github.com:cesarom18/empleo-talento.git
+git clone git@github.com:EnsoG/empleo-talento.git
 ```
 
 ## Front-End Setup
