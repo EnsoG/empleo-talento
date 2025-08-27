@@ -7,8 +7,6 @@ from typing import Dict, List
 import asyncio
 import sys
 import os
-import glob
-import json
 
 # Agregar al path para imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -49,6 +47,33 @@ async def test_codelco_scraper():
                 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error en el scraper: {str(e)}")
+
+
+@router.post("/codelco/execute")
+async def execute_codelco_scraping_simple():
+    """Endpoint que ejecuta el scraping y espera a que termine antes de responder"""
+    try:
+        scraper = CodelcoScraper()
+        result = await scraper.scrape_and_save()
+        
+        if result["success"]:
+            return {
+                "status": "completed",
+                "message": f"Búsqueda completada exitosamente. {result['jobs_count']} empleos encontrados.",
+                "jobs_count": result['jobs_count'],
+                "db_saved_count": result['db_saved_count']
+            }
+        else:
+            return {
+                "status": "completed",
+                "message": "Búsqueda completada pero no se encontraron empleos nuevos.",
+                "jobs_count": 0,
+                "db_saved_count": 0
+            }
+            
+    except Exception as e:
+        print(f"Error en búsqueda: {e}")
+        raise HTTPException(status_code=500, detail=f"Error durante la búsqueda: {str(e)}")
 
 
 @router.post("/codelco/run")
@@ -102,11 +127,11 @@ async def get_scraped_jobs(session: SessionDep, limit: int = 50):
                 "title": job.titulo,
                 "location": job.ubicacion,
                 "external_id": job.id_proceso,  # ID del proceso de Codelco como string
-                "external_url": job.url,
+                "url": job.url,  # URL directa para enlaces
                 "region": job.region,
                 "postal_code": job.codigo_postal,
                 "publication_date": job.fecha,  # Fecha de cierre como string
-                "created_at": job.fecha_scraped.isoformat() if job.fecha_scraped else "",
+                "scraped_at": job.fecha_scraped.isoformat() if job.fecha_scraped else "",
                 "is_active": job.activo,
                 "description": job.descripcion or "",
                 "requirements": job.requisitos or ""
@@ -121,62 +146,6 @@ async def get_scraped_jobs(session: SessionDep, limit: int = 50):
         
     except Exception as e:
         print(f"Error al obtener empleos desde DB: {e}")
-        raise HTTPException(status_code=500, detail=f"Error obteniendo empleos: {str(e)}")
-
-
-@router.get("/codelco/jobs/from-file")
-async def get_scraped_jobs_from_file(limit: int = 50):
-    """Obtiene los empleos de Codelco del archivo JSON más reciente (respaldo)"""
-    try:
-        import json
-        import glob
-        
-        # Buscar el archivo JSON más reciente
-        json_files = glob.glob("empleos_codelco_*.json")
-        if not json_files:
-            return {
-                "status": "success",
-                "count": 0,
-                "jobs": [],
-                "message": "No hay datos de empleos de Codelco disponibles"
-            }
-        
-        # Obtener el archivo más reciente
-        latest_file = max(json_files, key=os.path.getctime)
-        
-        # Leer los datos
-        with open(latest_file, 'r', encoding='utf-8') as f:
-            jobs_data = json.load(f)
-        
-        # Limitar resultados
-        jobs_data = jobs_data[:limit]
-        
-        # Convertir al formato esperado por el frontend
-        formatted_jobs = []
-        for i, job in enumerate(jobs_data):
-            formatted_jobs.append({
-                "id": i + 1,  # ID numérico secuencial
-                "title": job.get("titulo", ""),
-                "location": job.get("ubicacion", ""),
-                "external_id": job.get("id_proceso", ""),
-                "external_url": job.get("url", ""),
-                "region": job.get("region", ""),
-                "postal_code": job.get("codigo_postal", ""),
-                "publication_date": job.get("fecha", ""),
-                "created_at": job.get("fecha_scraped", ""),
-                "is_active": True,
-                "description": job.get("descripcion", ""),
-                "requirements": job.get("requisitos", "")
-            })
-        
-        return {
-            "status": "success",
-            "count": len(formatted_jobs),
-            "jobs": formatted_jobs,
-            "source_file": latest_file
-        }
-        
-    except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error obteniendo empleos: {str(e)}")
 
 

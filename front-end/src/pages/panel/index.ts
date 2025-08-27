@@ -1,6 +1,7 @@
 export { AddCandidatePlan } from "./AddCandidatePlan";
 export { AddCompanyPlan } from "./AddCompanyPlan";
 export { AddPublication } from "./AddPublication";
+export { AdminJobManagement } from "./AdminJobManagement";
 export { CandidatePlanDetail } from "./CandidatePlanDetail";
 export { CompanyDetail } from "./CompanyDetail";
 export { CompanyPlanDetail } from "./CompanyPlanDetail";

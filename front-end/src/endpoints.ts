@@ -83,4 +83,10 @@ export const endpoints = {
     codelcoTest: `${baseUrl}/scrapers/codelco/test`,
     codelcoRun: `${baseUrl}/scrapers/codelco/run`,
     codelcoJobs: `${baseUrl}/scrapers/codelco/jobs`,
+    // Admin Scraper Endpoints
+    adminCodelcoExecute: `${baseUrl}/admin/codelco/scraping/execute`,
+    adminCodelcoStatus: `${baseUrl}/admin/codelco/scraping/status`,
+    adminCodelcoProgress: `${baseUrl}/admin/codelco/scraping/progress`,
+    adminCodelcoReset: `${baseUrl}/admin/codelco/scraping/reset`,
+    adminCodelcoJobs: `${baseUrl}/admin/codelco/jobs`,
 } as const

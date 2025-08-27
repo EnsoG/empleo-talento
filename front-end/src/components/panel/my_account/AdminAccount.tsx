@@ -8,7 +8,9 @@ import {
     Skeleton,
     Stack,
     Text,
-    TextInput
+    TextInput,
+    Title,
+    Space
 } from "@mantine/core";
 
 import { useAuth } from "../../../hooks/useAuth";
@@ -16,6 +18,7 @@ import { useFetch } from "../../../hooks/useFetch";
 import { Admin } from "../../../types";
 import { endpoints } from "../../../endpoints";
 import { adminInfoSchema } from "../../../schemas/panelSchemas";
+import { AdminCodelcoPanel } from "../../AdminCodelcoPanel";
 
 export const AdminAccount = () => {
     const { user } = useAuth();
@@ -99,6 +102,12 @@ export const AdminAccount = () => {
                     </Stack>
                 </form>
             </Skeleton>
+            
+            <Space h="xl" />
+            
+            <Title order={3}>Panel de Control de Empleos Externos</Title>
+            <Space h="md" />
+            <AdminCodelcoPanel />
         </Card>
     )
 }

@@ -15,6 +15,7 @@ import {
     MyCompany,
     PublishJob,
     JobManagement,
+    AdminJobManagement,
     MyStaff,
     MyCompanies,
     CompanyDetail,
@@ -114,6 +115,7 @@ export const AppRouter = () => {
             </Route>
             {/* Panel (Admin)*/}
             <Route element={<ProtectedRoutes requiredRoles={[UserRole.admin]} />}>
+                <Route path={AppPaths.adminJobManagement} element={<AdminJobManagement />} />
                 <Route path={AppPaths.myCompanies} element={<MyCompanies />} />
                 <Route path={AppPaths.myPendingJobs} element={<MyPendingJobs />} />
                 <Route path={`${AppPaths.companyDetail}/:id`} element={<CompanyDetail />} />

@@ -24,6 +24,7 @@ import {
     NotePencil,
     OfficeChair,
     Package,
+    Robot,
     Swap,
     Tag,
     Target,
@@ -41,6 +42,12 @@ import { AppPaths, UserPosition, UserRole } from "../../types";
 import { SidebarItem, SidebarItemProps } from "./SidebarItem";
 
 const navItems: SidebarItemProps[] = [
+    {
+        label: "Empleos Externos",
+        icon: <Robot />,
+        path: AppPaths.adminJobManagement,
+        roles: [UserRole.admin]
+    },
     {
         label: "Mis Empresas",
         icon: <Buildings />,

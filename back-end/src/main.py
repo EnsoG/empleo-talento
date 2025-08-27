@@ -8,6 +8,7 @@ from config.db import close_db
 from config.settings import get_settings
 from routers import (
     admin_users,
+    admin,
     auth,
     candidates,
     candidate_studies,
@@ -31,7 +32,8 @@ from routers import (
     role_positions,
     generic_positions,
     metadata,
-    scrapers
+    scrapers,
+    unified_jobs
 )
 
 # LifeSpan Server Cycle
@@ -61,6 +63,7 @@ app.mount(
 
 # App Routers
 app.include_router(admin_users.router, prefix="/v1")
+app.include_router(admin.router, prefix="/v1")
 app.include_router(auth.router, prefix="/v1")
 app.include_router(candidates.router, prefix="/v1")
 app.include_router(candidate_studies.router, prefix="/v1")
@@ -85,3 +88,4 @@ app.include_router(role_positions.router, prefix="/v1")
 app.include_router(generic_positions.router, prefix="/v1")
 app.include_router(metadata.router, prefix="/v1")
 app.include_router(scrapers.router, prefix="/v1")
+app.include_router(unified_jobs.router, prefix="/v1")

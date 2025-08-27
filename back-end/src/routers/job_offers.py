@@ -4,10 +4,11 @@ from sqlmodel import select, func, or_
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import IntegrityError
 from datetime import date
-from typing import Annotated, Literal
+from typing import Annotated, Literal, List, Dict, Any
 
 from config.db import SessionDep
 from models.job_offer import JobOffer
+from models.codelco_job import CodelcoJob
 from models.job_question import JobQuestion
 from models.city import City
 from models.region import Region

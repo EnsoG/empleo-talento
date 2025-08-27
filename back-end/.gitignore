@@ -9,3 +9,4 @@ src/uploads/*
 
 # Venv Directory
 venv
+.venv

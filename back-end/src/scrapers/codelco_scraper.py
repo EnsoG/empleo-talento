@@ -19,7 +19,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models.codelco_job import CodelcoJob, CodelcoJobCreate
-from config.db import get_session
+from config.db import async_session
 from sqlmodel import select
 
 
@@ -356,14 +356,14 @@ class CodelcoScraper:
         print("💾 Guardando empleos en la base de datos...")
         
         saved_count = 0
-        async with get_session() as session:
+        async with async_session() as session:
             for job in jobs:
                 try:
                     # Verificar si el empleo ya existe
-                    existing_job = await session.exec(
+                    result = await session.execute(
                         select(CodelcoJob).where(CodelcoJob.id_proceso == job.id_proceso)
                     )
-                    existing_job = existing_job.first()
+                    existing_job = result.scalar_one_or_none()
                     
                     if existing_job:
                         # Actualizar empleo existente
@@ -414,25 +414,99 @@ class CodelcoScraper:
         """Método principal que ejecuta el scraping completo y guarda los resultados"""
         jobs = await self.scrape_all_jobs()
         if jobs:
-            # Guardar en JSON
-            json_file = self.save_to_json(jobs, output_file)
-            
             # Guardar en base de datos
             db_count = await self.save_to_database(jobs)
             
             return {
-                "json_file": json_file,
                 "jobs_count": len(jobs),
                 "db_saved_count": db_count,
                 "success": True
             }
         
         return {
-            "json_file": "",
             "jobs_count": 0,
             "db_saved_count": 0,
             "success": False
         }
+
+    async def scrape_and_save_with_progress(self, progress_tracker=None, output_file: str = None) -> Dict[str, any]:
+        """
+        Método principal que ejecuta el scraping completo con seguimiento de progreso
+        
+        Args:
+            progress_tracker: Instancia de ScrapingProgress para seguimiento en tiempo real
+            output_file: Nombre opcional del archivo de salida
+        """
+        try:
+            # Importar dinámicamente para evitar dependencias circulares
+            from models.scraping_progress import ScrapingStatus
+            
+            # Inicializar progreso
+            if progress_tracker:
+                await progress_tracker.update_status(
+                    ScrapingStatus.STARTING,
+                    "Iniciando scraping de Codelco..."
+                )
+            
+            # Fase 1: Obtener páginas
+            if progress_tracker:
+                await progress_tracker.update_status(
+                    ScrapingStatus.FETCHING_PAGES,
+                    "Obteniendo páginas de empleos..."
+                )
+            
+            jobs = await self.scrape_all_jobs()
+            
+            if not jobs:
+                if progress_tracker:
+                    await progress_tracker.set_error("No se encontraron empleos")
+                return {
+                    "json_file": "",
+                    "jobs_count": 0,
+                    "db_saved_count": 0,
+                    "success": False
+                }
+            
+            # Fase 2: Procesar empleos
+            if progress_tracker:
+                await progress_tracker.update_status(
+                    ScrapingStatus.EXTRACTING_JOBS,
+                    "Procesando información de empleos..."
+                )
+                await progress_tracker.update_jobs_count(total=len(jobs), processed=len(jobs))
+            
+            # Fase 3: Guardar en base de datos
+            if progress_tracker:
+                await progress_tracker.update_status(
+                    ScrapingStatus.SAVING_TO_DB,
+                    "Guardando empleos en base de datos..."
+                )
+            
+            db_count = await self.save_to_database(jobs)
+            
+            if progress_tracker:
+                await progress_tracker.update_jobs_count(saved=db_count)
+                await progress_tracker.update_status(
+                    ScrapingStatus.COMPLETED,
+                    f"Scraping completado: {len(jobs)} empleos procesados, {db_count} guardados"
+                )
+            
+            return {
+                "jobs_count": len(jobs),
+                "db_saved_count": db_count,
+                "success": True
+            }
+            
+        except Exception as e:
+            if progress_tracker:
+                await progress_tracker.set_error(f"Error durante el scraping: {str(e)}")
+            
+            return {
+                "jobs_count": 0,
+                "db_saved_count": 0,
+                "success": False,
+                "error": str(e)
+            }
 
 
 # Función principal para ejecutar el scraper
@@ -443,8 +517,7 @@ async def main():
     
     if result["success"]:
         print(f"\n🎉 Scraping completado exitosamente!")
-        print(f"📁 Archivo JSON: {result['json_file']}")
-        print(f"📊 Empleos encontrados: {result['jobs_count']}")
+        print(f" Empleos encontrados: {result['jobs_count']}")
         print(f"💾 Empleos guardados en DB: {result['db_saved_count']}")
         print(f"🌐 Fuente: {scraper.base_url}")
     else:

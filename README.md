@@ -115,3 +115,96 @@ En relacion a los requerimientos del sistema, se debe servir tanto archivos de f
     - `photos`
     - `logos`
     - `resumes`
+
+## Funcionalidad de Scraping - Panel de Administración
+
+El sistema incluye funcionalidad específica para que los administradores puedan ejecutar el scraping de ofertas laborales de Codelco desde el panel de administración.
+
+### Endpoints de Admin para Scraping
+
+**Autenticación requerida**: Todos los endpoints requieren autenticación como administrador.
+
+#### Ejecutar Scraping de Codelco
+```
+POST /v1/admin/codelco/scraping/execute
+```
+- **Descripción**: Ejecuta el scraping de ofertas de Codelco en segundo plano
+- **Autenticación**: Solo administradores
+- **Respuesta**:
+```json
+{
+  "detail": "Codelco scraping started successfully",
+  "status": "running",
+  "message": "El scraping de ofertas de Codelco ha iniciado en segundo plano"
+}
+```
+
+#### Estado del Scraping
+```
+GET /v1/admin/codelco/scraping/status
+```
+- **Descripción**: Obtiene el estado actual del sistema de scraping
+- **Respuesta**:
+```json
+{
+  "detail": "Codelco scraping status retrieved successfully",
+  "status": "ready",
+  "active_jobs_count": 25,
+  "last_scraping": "2024-08-24T10:30:00",
+  "system_health": "operational"
+}
+```
+
+#### Ver Empleos de Codelco
+```
+GET /v1/admin/codelco/jobs?limit=50
+```
+- **Descripción**: Lista los empleos scrapeados de Codelco
+- **Parámetros**: `limit` (opcional, por defecto 50)
+
+#### Desactivar Empleos
+```
+DELETE /v1/admin/codelco/jobs
+```
+- **Descripción**: Desactiva todos los empleos de Codelco
+- **Uso**: Para limpiar empleos obsoletos
+
+### Componente Frontend
+
+El sistema incluye un componente React `AdminCodelcoPanel` que proporciona:
+
+- **Botón de ejecución** para iniciar el scraping
+- **Estado en tiempo real** del sistema
+- **Lista de empleos** scrapeados con detalles
+- **Gestión de empleos** (desactivar, actualizar)
+- **Información del sistema** y métricas
+
+### Integración con Ofertas Regulares
+
+Los empleos scrapeados de Codelco:
+- Se almacenan en la tabla `codelco_jobs`
+- Aparecen como ofertas regulares en el listado público
+- Mantienen referencia a su origen (Codelco)
+- Incluyen enlaces directos al sitio oficial
+
+### Características de Seguridad
+
+- **Acceso restringido**: Solo usuarios administradores
+- **Verificación de permisos**: Validación en cada endpoint
+- **Ejecución en segundo plano**: No bloquea la interfaz
+- **Manejo de errores**: Logging y notificaciones apropiadas
+
+### Uso del Panel de Administración
+
+1. **Iniciar sesión** como administrador
+2. **Acceder al panel** de administración
+3. **Usar el componente** `AdminCodelcoPanel`
+4. **Ejecutar scraping** con el botón correspondiente
+5. **Monitorear resultados** en tiempo real
+
+### Notas Importantes
+
+- **Proceso en segundo plano**: El scraping no bloquea otras operaciones
+- **Prevención de duplicados**: Se verifica por ID de proceso de Codelco
+- **Actualización automática**: Los empleos aparecen automáticamente en el portal
+- **Gestión de datos**: Posibilidad de desactivar empleos obsoletos

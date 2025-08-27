@@ -50,6 +50,7 @@ export enum AppPaths {
     myJobs = "/panel/my-jobs",
     myPendingJobs = "/panel/my-pending-jobs",
     jobManagement = "/panel/job-detail",
+    adminJobManagement = "/panel/admin-job-management",
     myCompany = "/panel/my-company",
     myStaff = "/panel/my-staff",
     /* Other */
