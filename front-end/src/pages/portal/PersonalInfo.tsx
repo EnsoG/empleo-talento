@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 
 import { useFetch } from "../../hooks/useFetch";
-import { Candidate, DriverLicenses, Gender, Nationality } from "../../types";
+import { Candidate, DriverLicense, Gender, Nationality } from "../../types";
 import { endpoints } from "../../endpoints";
 import { personalInfoSchema } from "../../schemas/portalSchemas";
 import { parseDateToLocal } from "../../utilities";
@@ -24,7 +24,7 @@ import { PortalBanner } from "../../components/portal/PortalBanner";
 
 export const PersonalInfo = () => {
     const { data: candidate, isLoading: candidateLoading, fetchData: fetchCandidate } = useFetch<Candidate>();
-    const { data: licenses, isLoading: licensesLoading, fetchData: fetchLicenses } = useFetch<DriverLicenses>();
+    const { data: licenses, isLoading: licensesLoading, fetchData: fetchLicenses } = useFetch<DriverLicense[]>();
     const { isLoading: updateLoading, fetchData: fetchUpdate } = useFetch();
     const form = useForm({
         mode: "uncontrolled",
@@ -39,6 +39,7 @@ export const PersonalInfo = () => {
     const getDriverLicenses = async () => await fetchLicenses(endpoints.driverLicenses, {
         method: "GET"
     });
+
     const handleSubmit = async (values: typeof form.values) => {
         // Transform Data And Do Request
         const data = personalInfoSchema.parse(values);
@@ -148,21 +149,20 @@ export const PersonalInfo = () => {
                                     {...form.getInputProps("nationality")}
                                     searchable
                                     clearable />
-                                    
-                            {(licenses) &&
-                                <Select
-                                    label="Licencia Conducir"
-                                    placeholder="Seleccione su licencia de conducir"
-                                    key={form.key("license_id")}
-                                    {...form.getInputProps("license_id")}
-                                    data={licenses.map((l) => ({
+                                {(licenses) &&
+                                    <Select
+                                        label="Licencia Conducir"
+                                        placeholder="Seleccione su licencia de conducir"
+                                        key={form.key("license_id")}
+                                        {...form.getInputProps("license_id")}
+                                        data={licenses.map((l) => ({
                                             value: String(l.license_id),
                                             label: l.license
-                                    }))}
-                                    comboboxProps={{ withinPortal: false }}
-                                    clearable
-                                    searchable />
-                            }
+                                        }))}
+                                        comboboxProps={{ withinPortal: false }}
+                                        clearable
+                                        searchable />
+                                }
                                 <Button type="submit">Actualizar</Button>
                             </Stack>
                         </form>
