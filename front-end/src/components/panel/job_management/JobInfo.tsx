@@ -1,16 +1,27 @@
 import { useEffect, useState } from "react";
 import { useForm, zodResolver } from "@mantine/form";
+import { useEditor } from "@tiptap/react";
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import SubScript from '@tiptap/extension-subscript';
 import { DatePickerInput } from "@mantine/dates";
 import {
     Badge,
+    Box,
     Button,
     Card,
+    InputLabel,
     LoadingOverlay,
     ScrollArea,
     Select,
     Skeleton,
     Stack,
     Table,
+    Text,
     Textarea,
     TextInput
 } from "@mantine/core";
@@ -72,7 +83,21 @@ export const JobInfo = ({ offer, onGetOffer }: JobInfoProps) => {
         },
         validate: zodResolver(updateJobSchema)
     });
-
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            Underline,
+            Link,
+            Superscript,
+            SubScript,
+            Highlight,
+            TextAlign.configure({ types: ['heading', 'paragraph'] }),
+        ],
+        content: (offer.requirements) ? offer.requirements : undefined,
+        onUpdate: ({ editor }) => {
+            form.setFieldValue("requirements", editor.getHTML());
+        }
+    });
     const getCities = async () => await fetchCities(`${endpoints.getCities}?region=${region}`, {
         method: "GET",
         credentials: "include"
@@ -216,13 +241,58 @@ export const JobInfo = ({ offer, onGetOffer }: JobInfoProps) => {
                                     {...form.getInputProps("description")}
                                     disabled={offer.state != OfferState.active}
                                     rows={4} />
-                                <Textarea
-                                    label="Requisitos"
-                                    placeholder="Ingrese los requisitos"
-                                    key={form.key("requirements")}
-                                    {...form.getInputProps("requirements")}
-                                    disabled={offer.state != OfferState.active}
-                                    rows={4} />
+                                 <Box>
+                                    <InputLabel>
+                                        Requisitos
+                                    </InputLabel>
+                                    <RichTextEditor editor={editor}>
+                                        <RichTextEditor.Toolbar>
+                                            <RichTextEditor.ControlsGroup>
+                                                <RichTextEditor.Bold />
+                                                <RichTextEditor.Italic />
+                                                <RichTextEditor.Underline />
+                                                <RichTextEditor.Strikethrough />
+                                                <RichTextEditor.ClearFormatting />
+                                                <RichTextEditor.Highlight />
+                                                <RichTextEditor.Code />
+                                            </RichTextEditor.ControlsGroup>
+                                            <RichTextEditor.ControlsGroup>
+                                                <RichTextEditor.H1 />
+                                                <RichTextEditor.H2 />
+                                                <RichTextEditor.H3 />
+                                                <RichTextEditor.H4 />
+                                            </RichTextEditor.ControlsGroup>
+                                            <RichTextEditor.ControlsGroup>
+                                                <RichTextEditor.Blockquote />
+                                                <RichTextEditor.Hr />
+                                                <RichTextEditor.BulletList />
+                                                <RichTextEditor.OrderedList />
+                                                <RichTextEditor.Subscript />
+                                                <RichTextEditor.Superscript />
+                                            </RichTextEditor.ControlsGroup>
+                                            <RichTextEditor.ControlsGroup>
+                                                <RichTextEditor.Link />
+                                                <RichTextEditor.Unlink />
+                                            </RichTextEditor.ControlsGroup>
+                                            <RichTextEditor.ControlsGroup>
+                                                <RichTextEditor.AlignLeft />
+                                                <RichTextEditor.AlignCenter />
+                                                <RichTextEditor.AlignJustify />
+                                                <RichTextEditor.AlignRight />
+                                            </RichTextEditor.ControlsGroup>
+                                            <RichTextEditor.ControlsGroup>
+                                                <RichTextEditor.Undo />
+                                                <RichTextEditor.Redo />
+                                            </RichTextEditor.ControlsGroup>
+                                        </RichTextEditor.Toolbar>
+                                        <RichTextEditor.Content />
+                                    </RichTextEditor>
+                                    {form.errors.requirements &&
+                                        <Text size="sm" c="red">
+                                            {form.errors.requirements}
+                                        </Text>
+                                    }
+                                </Box>
                                 <TextInput
                                     label="Años Experiencia"
                                     placeholder="Ingrese los años de experiencia"

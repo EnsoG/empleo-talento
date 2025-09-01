@@ -277,7 +277,6 @@ async def create_offer(
             detail="An integrity error occurred. This may be due to a foreign key constraint violation or a data integrity issue. Please verify the data and try again"
         )
     except Exception as ex:
-        print(ex)
         await session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 

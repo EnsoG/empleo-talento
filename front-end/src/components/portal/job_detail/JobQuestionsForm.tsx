@@ -5,15 +5,15 @@ import { useForm, zodResolver } from "@mantine/form";
 import {
     Button,
     LoadingOverlay,
-    NumberInput,
-    Select,
     Stack
 } from "@mantine/core";
 
 import { useFetch } from "../../../hooks/useFetch";
-import { AppPaths, Question, QuestionType } from "../../../types";
+import { AppPaths, Question } from "../../../types";
 import { jobQuestionsFormSchema } from "../../../schemas/portalSchemas";
 import { endpoints } from "../../../endpoints";
+import { QuestionInput } from "./QuestionTypeInput";
+
 
 interface JobQuestionsFormProps {
     offerId: number;
@@ -71,29 +71,12 @@ export const JobQuestionsForm = ({ offerId, questions, onCloseModal: closeModal 
         <form onSubmit={form.onSubmit(handleSubmit)}>
             <LoadingOverlay visible={isLoading} />
             <Stack>
-                {questions.map((q, i) => ((q.question_type == QuestionType.yesOrNo)
-                    ? <Select
-                        label={q.question}
-                        placeholder="Seleccione una respuesta"
-                        data={["Si", "No"]}
-                        key={form.key(`answers.${i}.answer`)}
-                        {...form.getInputProps(`answers.${i}.answer`)}
-                        withAsterisk />
-                    : <NumberInput
-                        label={q.question}
-                        placeholder="Ingrese su respuesta"
-                        key={form.key(`answers.${i}.answer`)}
-                        {...form.getInputProps(`answers.${i}.answer`, {
-                            onChange: (value: string) => {
-                                form.setFieldValue(`answers.${i}.answer`, value?.toString() || "");
-                            }
-                        })}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        allowNegative={false}
-                        allowDecimal={false}
-                        hideControls
-                        withAsterisk />
+                {questions.map((q, i) => (
+                    <QuestionInput
+                        key={q.question_id}
+                        question={q}
+                        index={i}
+                        form={form} />
                 ))}
                 <Button type="submit">Enviar Postulacion</Button>
             </Stack>

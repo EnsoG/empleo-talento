@@ -111,15 +111,136 @@ const JobModal: React.FC<JobModalProps> = ({ job, opened, onClose }) => {
     };
 
     // Función mejorada de formateo de descripción (tomada de CodelcoJobCard)
-    const formatDescription = (text: string) => {
-        if (!text) return '';
+    const formatDescription = (text: string, job?: CodelcoJob) => {
+        // SIEMPRE intentar mostrar los requisitos primero
+        let contentToSearch = '';
         
-        // Agregar espacios después de puntos si no los hay
-        return text
-            .replace(/\.([A-Z])/g, '. $1')
-            .replace(/([a-z])([A-Z])/g, '$1 $2')
-            .replace(/\s+/g, ' ')
-            .trim();
+        // 1. Priorizar el campo requirements si existe
+        if (job?.requirements && job.requirements.trim().length > 0) {
+            contentToSearch = job.requirements;
+        }
+        // 2. Si no hay requirements, buscar en description
+        else if (text && text.trim().length > 0) {
+            contentToSearch = text;
+        }
+        
+        if (contentToSearch) {
+            // Buscar "Requisitos de Postulación:" específicamente
+            const requisitosIndex = contentToSearch.indexOf('Requisitos de Postulación:');
+            if (requisitosIndex !== -1) {
+                // Extraer desde "Requisitos de Postulación:" hasta el final
+                let requisitosSection = contentToSearch.substring(requisitosIndex);
+                
+                // Aplicar limpieza y formatear con saltos de línea
+                requisitosSection = requisitosSection
+                    .replace(/\\n/g, '\n')         // Convertir \n literal a salto de línea real
+                    .replace(/\\\\n/g, '\n')       // También convertir \\n doble escape
+                    .replace(/\\r/g, '')           // Eliminar \r literal
+                    .replace(/\\t/g, '  ')         // Convertir \t literal a espacios
+                    .replace(/\\a/g, '')           // Eliminar \a literal
+                    .replace(/\\b/g, ' ')          // \b literal a espacio
+                    .replace(/\\f/g, ' ')          // \f literal a espacio
+                    .replace(/\\v/g, ' ')          // \v literal a espacio
+                    .replace(/\r/g, '')            // Eliminar retornos de carro reales
+                    .replace(/\t/g, '  ')          // Tabulaciones reales a espacios
+                    .replace(/•\s*/g, ' • ')       // Asegurar espacios alrededor de viñetas
+                    .replace(/\.([A-Z])/g, '. $1')
+                    .replace(/([a-z])([A-Z])/g, '$1 $2')
+                    .replace(/\s+/g, ' ')          // Normalizar espacios múltiples (pero mantener \n)
+                    .replace(/ \n/g, '\n')         // Limpiar espacios antes de saltos de línea
+                    .replace(/\n /g, '\n')         // Limpiar espacios después de saltos de línea
+                    .trim();
+                
+                return requisitosSection;
+            }
+            
+            // Si no encuentra "Requisitos de Postulación:", buscar otras variaciones
+            const variations = [
+                'Requisitos de Postulacion:',
+                'Requisitos:',
+                'Requirements:',
+                'Requerimientos:'
+            ];
+            
+            for (const variation of variations) {
+                const index = contentToSearch.indexOf(variation);
+                if (index !== -1) {
+                    const extractedText = contentToSearch.substring(index);
+                    return extractedText
+                        .replace(/\\n/g, ' ')    // Reemplazar \n literal con espacios
+                        .replace(/\\r/g, ' ')    // Reemplazar \r literal con espacios
+                        .replace(/\\t/g, ' ')    // Reemplazar \t literal con espacios
+                        .replace(/\n/g, ' ')     // Reemplazar saltos de línea reales
+                        .replace(/\r/g, ' ')     // Reemplazar retornos de carro reales
+                        .replace(/\t/g, ' ')     // Reemplazar tabulaciones reales
+                        .replace(/•\s*/g, ' • ') // Asegurar espacios alrededor de viñetas
+                        .replace(/\.([A-Z])/g, '. $1')
+                        .replace(/([a-z])([A-Z])/g, '$1 $2')
+                        .replace(/\s+/g, ' ')    // Normalizar espacios múltiples
+                        .trim();
+                }
+            }
+        }
+        
+        // Si no hay descripción útil, crear información basada en el título del trabajo
+        if (job?.title) {
+            const title = job.title.toLowerCase();
+            const info = [];
+            
+            // Extraer información útil del título
+            if (title.includes('ingeniero') || title.includes('ingeniera')) {
+                info.push('• Perfil: Profesional en Ingeniería');
+            }
+            if (title.includes('operador') || title.includes('operadora')) {
+                info.push('• Perfil: Operador/a de procesos industriales');
+            }
+            if (title.includes('supervisor') || title.includes('supervisora')) {
+                info.push('• Perfil: Supervisión y liderazgo de equipos');
+            }
+            if (title.includes('especialista')) {
+                info.push('• Perfil: Especialista técnico');
+            }
+            if (title.includes('jefe') || title.includes('jefa')) {
+                info.push('• Perfil: Jefatura y gestión');
+            }
+            if (title.includes('analista')) {
+                info.push('• Perfil: Análisis técnico y reportes');
+            }
+            if (title.includes('director') || title.includes('directora')) {
+                info.push('• Perfil: Dirección ejecutiva');
+            }
+            
+            // Agregar área específica si se detecta
+            if (title.includes('mantención') || title.includes('mantenimiento')) {
+                info.push('• Área: Mantención de equipos e instalaciones');
+            }
+            if (title.includes('fundición')) {
+                info.push('• Área: Procesos de fundición');
+            }
+            if (title.includes('eléctrico') || title.includes('eléctrica')) {
+                info.push('• Área: Sistemas eléctricos');
+            }
+            if (title.includes('subterránea') || title.includes('mina')) {
+                info.push('• Área: Operaciones mineras');
+            }
+            if (title.includes('seguridad') || title.includes('prevención')) {
+                info.push('• Área: Seguridad y prevención de riesgos');
+            }
+            if (title.includes('planificación')) {
+                info.push('• Área: Planificación y gestión');
+            }
+            if (title.includes('hospital') || title.includes('enfermera')) {
+                info.push('• Área: Servicios de salud');
+            }
+            
+            // Información general de Codelco
+            info.push('• Empresa: Corporación Nacional del Cobre (CODELCO)');
+            info.push('• Sector: Minería del cobre');
+            
+            return info.join('\\n');
+        }
+        
+        return 'Información detallada disponible en el sitio web de Codelco';
     };
 
     if (!job) return null;
@@ -152,7 +273,7 @@ const JobModal: React.FC<JobModalProps> = ({ job, opened, onClose }) => {
                     <Group gap="xs">
                         <MapPin size={16} color="#868e96" />
                         <Text size="sm">
-                            {job.location}{job.region && job.location !== job.region ? ` - ${job.region}` : ''}
+                            {job.location}
                         </Text>
                     </Group>
                     <Group gap="xs">
@@ -162,20 +283,11 @@ const JobModal: React.FC<JobModalProps> = ({ job, opened, onClose }) => {
                 </Group>
 
                 <div>
-                    <Text fw={600} mb="xs">Descripción:</Text>
-                    <Text size="sm" style={{ whiteSpace: 'pre-wrap' }}>
-                        {formatDescription(job.description) || "Sin descripción disponible"}
+                    <Text fw={600} mb="xs">Descripción y Requisitos:</Text>
+                    <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
+                        {formatDescription(job.description, job) || "Sin información disponible"}
                     </Text>
                 </div>
-
-                {job.requirements && (
-                    <div>
-                        <Text fw={600} mb="xs">Requisitos:</Text>
-                        <Text size="sm" style={{ whiteSpace: 'pre-wrap' }}>
-                            {formatDescription(job.requirements)}
-                        </Text>
-                    </div>
-                )}
 
                 <Divider />
 
@@ -269,15 +381,123 @@ const JobCard: React.FC<JobCardProps> = ({ job, onViewDetails }) => {
     };
 
     // Función mejorada de formateo de descripción
-    const formatDescription = (text: string) => {
-        if (!text) return '';
+    const formatDescription = (text: string, job?: CodelcoJob) => {
+        // SIEMPRE intentar mostrar los requisitos primero
+        let contentToSearch = '';
         
-        // Agregar espacios después de puntos si no los hay
-        return text
-            .replace(/\.([A-Z])/g, '. $1')
-            .replace(/([a-z])([A-Z])/g, '$1 $2')
-            .replace(/\s+/g, ' ')
-            .trim();
+        // 1. Priorizar el campo requirements si existe
+        if (job?.requirements && job.requirements.trim().length > 0) {
+            contentToSearch = job.requirements;
+        }
+        // 2. Si no hay requirements, buscar en description
+        else if (text && text.trim().length > 0) {
+            contentToSearch = text;
+        }
+        
+        if (contentToSearch) {
+            // Buscar "Requisitos de Postulación:" específicamente
+            const requisitosIndex = contentToSearch.indexOf('Requisitos de Postulación:');
+            if (requisitosIndex !== -1) {
+                // Extraer desde "Requisitos de Postulación:" hasta el final
+                let requisitosSection = contentToSearch.substring(requisitosIndex);
+                
+                // Para tarjetas, mostrar solo los primeros 150 caracteres de los requisitos
+                if (requisitosSection.length > 150) {
+                    requisitosSection = requisitosSection.substring(0, 150) + '...';
+                }
+                
+                // Aplicar limpieza profunda y formatear
+                requisitosSection = requisitosSection
+                    .replace(/\\n/g, '')    // Eliminar \n literal completamente
+                    .replace(/\n/g, ' ')           // \n como caracter real
+                    .replace(/\\\\n/g, ' ')        // \\n escapado doble
+                    .replace(/\\\n/g, ' ')         // \n con escape
+                    .replace(/\\r/g, ' ')          // \r literal
+                    .replace(/\r/g, ' ')           // \r real
+                    .replace(/\\t/g, ' ')          // \t literal
+                    .replace(/\t/g, ' ')           // \t real
+                    .replace(/\\b/g, ' ')          // \b literal
+                    .replace(/\\f/g, ' ')          // \f literal
+                    .replace(/\\v/g, ' ')          // \v literal
+                    .replace(/\s+/g, ' ')          // Normalizar espacios
+                    .trim()
+                    .replace(/•\s*/g, ' • ') // Asegurar espacios alrededor de viñetas
+                    .replace(/\.([A-Z])/g, '. $1')
+                    .replace(/([a-z])([A-Z])/g, '$1 $2');
+                
+                return requisitosSection;
+            }
+            
+            // Si no encuentra "Requisitos de Postulación:", buscar otras variaciones
+            const variations = [
+                'Requisitos de Postulacion:',
+                'Requisitos:',
+                'Requirements:',
+                'Requerimientos:'
+            ];
+            
+            for (const variation of variations) {
+                const index = contentToSearch.indexOf(variation);
+                if (index !== -1) {
+                    let extractedText = contentToSearch.substring(index);
+                    if (extractedText.length > 150) {
+                        extractedText = extractedText.substring(0, 150) + '...';
+                    }
+                    return extractedText
+                        .replace(/\\n/g, ' ')    // Reemplazar \n literal con espacios
+                        .replace(/\\r/g, ' ')    // Reemplazar \r literal con espacios
+                        .replace(/\\t/g, ' ')    // Reemplazar \t literal con espacios
+                        .replace(/\n/g, ' ')     // Reemplazar saltos de línea reales
+                        .replace(/\r/g, ' ')     // Reemplazar retornos de carro reales
+                        .replace(/\t/g, ' ')     // Reemplazar tabulaciones reales
+                        .replace(/•\s*/g, ' • ') // Asegurar espacios alrededor de viñetas
+                        .replace(/\.([A-Z])/g, '. $1')
+                        .replace(/([a-z])([A-Z])/g, '$1 $2')
+                        .replace(/\s+/g, ' ')    // Normalizar espacios múltiples
+                        .trim();
+                }
+            }
+        }
+        
+        // Si no hay descripción útil, crear información basada en el título del trabajo
+        if (job?.title) {
+            const title = job.title.toLowerCase();
+            const info = [];
+            
+            // Extraer información útil del título (versión condensada para tarjetas)
+            if (title.includes('ingeniero') || title.includes('ingeniera')) {
+                info.push('Perfil: Profesional en Ingeniería');
+            } else if (title.includes('operador') || title.includes('operadora')) {
+                info.push('Perfil: Operador/a de procesos');
+            } else if (title.includes('supervisor') || title.includes('supervisora')) {
+                info.push('Perfil: Supervisión de equipos');
+            } else if (title.includes('especialista')) {
+                info.push('Perfil: Especialista técnico');
+            } else if (title.includes('jefe') || title.includes('jefa')) {
+                info.push('Perfil: Jefatura y gestión');
+            } else if (title.includes('director') || title.includes('directora')) {
+                info.push('Perfil: Dirección ejecutiva');
+            } else {
+                info.push('Posición en área operativa/técnica');
+            }
+            
+            // Área específica (solo una para tarjetas)
+            if (title.includes('mantención') || title.includes('mantenimiento')) {
+                info.push('Área: Mantención');
+            } else if (title.includes('fundición')) {
+                info.push('Área: Fundición');
+            } else if (title.includes('mina') || title.includes('subterránea')) {
+                info.push('Área: Operaciones mineras');
+            } else if (title.includes('seguridad') || title.includes('prevención')) {
+                info.push('Área: Seguridad');
+            } else if (title.includes('hospital') || title.includes('enfermera')) {
+                info.push('Área: Servicios de salud');
+            }
+            
+            return info.join(' • ');
+        }
+        
+        return 'Información disponible en el sitio web de Codelco';
     };
 
     const handleOpenExternal = () => {
@@ -348,11 +568,11 @@ const JobCard: React.FC<JobCardProps> = ({ job, onViewDetails }) => {
                 </Group>
             </Flex>
 
-            {/* Ubicación mejorada - evita duplicación */}
+            {/* Ubicación simplificada */}
             <Group gap="xs" mb="xs">
                 <MapPin size={14} color="#868e96" />
                 <Text c="gray" size="sm">
-                    {job.location}{job.region && job.location !== job.region ? ` - ${job.region}` : ''}
+                    {job.location}
                 </Text>
             </Group>
 
@@ -374,7 +594,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onViewDetails }) => {
                 mb="md"
                 style={{ minHeight: '2.4em' }}
             >
-                {formatDescription(job.description) || "Sin descripción disponible"}
+                {formatDescription(job.description, job) || "Sin descripción disponible"}
             </Text>
 
             <Flex

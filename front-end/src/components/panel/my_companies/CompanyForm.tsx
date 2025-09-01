@@ -73,7 +73,7 @@ export const CompanyForm = ({ onGetCompanies }: CompanyFormProps) => {
     }, []);
 
     return (
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+        <form onSubmit={form.onSubmit(handleSubmit)} style={{ position: "relative" }}>
             <LoadingOverlay visible={isLoading} />
             <Stack>
                 <Divider label="Informacion Empresa" />

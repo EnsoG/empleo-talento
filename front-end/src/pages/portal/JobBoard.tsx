@@ -6,7 +6,6 @@ import {
     Grid,
     Stack,
     Pagination,
-    Image,
     Center,
     Skeleton,
     Alert,
@@ -23,7 +22,6 @@ import { FilterCollapse } from "../../components/FilterCollapse";
 import { JobFilters } from "../../components/JobFilters";
 import { JobCard } from "../../components/portal/JobCard";
 import { CodelcoJobsSection } from "../../components/portal/CodelcoJobsSection";
-import portalDivider2 from "../../assets/svg/portal-divider-2.svg";
 
 export const JobBoard = () => {
     const [params] = useSearchParams();
@@ -96,9 +94,6 @@ export const JobBoard = () => {
                                 onChange={(v) => updateFilter("search", v)}
                                 onSearch={handleSearch} />
                             
-                            {/* Sección de empleos de Codelco */}
-                            <CodelcoJobsSection />
-                            
                             <Skeleton
                                 height="100%"
                                 visible={offersLoading}
@@ -127,10 +122,10 @@ export const JobBoard = () => {
                             </Skeleton>
                         </Grid.Col>
                     </Grid>
+                    
+                    {/* Sección de empleos de Codelco debajo del paginador */}
+                    <CodelcoJobsSection />
                 </Container>
-                <Image
-                    className="portal-divider"
-                    src={portalDivider2} />
             </Box>
         </PortalLayout>
     )

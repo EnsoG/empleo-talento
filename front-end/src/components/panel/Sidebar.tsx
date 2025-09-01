@@ -46,12 +46,14 @@ const navItems: SidebarItemProps[] = [
         label: "Empleos Externos",
         icon: <Robot />,
         path: AppPaths.adminJobManagement,
+        associatedPaths: [AppPaths.companyDetail],
         roles: [UserRole.admin]
     },
     {
         label: "Mis Empresas",
         icon: <Buildings />,
         path: AppPaths.myCompanies,
+        associatedPaths: [AppPaths.publishJob, AppPaths.jobManagement],
         roles: [UserRole.admin]
     },
     {
@@ -156,7 +158,13 @@ const navItems: SidebarItemProps[] = [
     {
         label: "Gestion Planes",
         icon: <Package />,
-        path: "",
+        path: "",        
+        associatedPaths: [
+            AppPaths.addCandidatePlan,
+            AppPaths.candidatePlanDetail,
+            AppPaths.addCompanyPlan,
+            AppPaths.companyPlanDetail
+        ],
         options: [
             {
                 label: "Planes Candidatos",
@@ -175,6 +183,7 @@ const navItems: SidebarItemProps[] = [
         label: "Gestion Publicaciones",
         icon: <NotePencil />,
         path: "",
+        associatedPaths: [AppPaths.addPublication, AppPaths.publicationDetail],
         options: [
             {
                 label: "Mis Publicaciones",

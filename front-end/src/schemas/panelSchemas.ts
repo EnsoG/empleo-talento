@@ -198,7 +198,7 @@ export const addPublicationSchema = z.object({
     title: z.string().nonempty({ message: "El titulo es obligatorio" }),
     description: z.string().nonempty({ message: "La descripcion es obligatoria" }),
     state: z.string().nonempty({ message: "Seleccionar el estado es obligatorio" }),
-    image: z.instanceof(File)
+    image: z.instanceof(File, { message: "Seleccionar una imagen es obligatorio" })
         .refine((file) => file === null || file.size <= 1 * 1024 ** 2, {
             message: "El archivo debe pesar menos de 1MB",
         })

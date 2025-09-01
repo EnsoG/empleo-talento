@@ -6,6 +6,7 @@ from utilities import validate_empty_string
 class QuestionTypeEnum(IntEnum):
     yerOrNo = 0
     numeric = 1
+    text = 2
 
 class BaseJobQuestion(BaseModel):
     model_config = ConfigDict(

@@ -533,9 +533,16 @@ async def initialize_db():
             ]
             # Driver License Table
             driver_licenses = [
-                driver_license.DriverLicense(license=1),
-                driver_license.DriverLicense(license=2),
-                driver_license.DriverLicense(license=3)
+                driver_license.DriverLicense(license="A1"),
+                driver_license.DriverLicense(license="A2"),
+                driver_license.DriverLicense(license="A3"),
+                driver_license.DriverLicense(license="A4"),
+                driver_license.DriverLicense(license="A5"),
+                driver_license.DriverLicense(license="B"),
+                driver_license.DriverLicense(license="C"),
+                driver_license.DriverLicense(license="D"),
+                driver_license.DriverLicense(license="E"),
+                driver_license.DriverLicense(license="F"),
             ]
             # Role Position Table
             role_positions = [

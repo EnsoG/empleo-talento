@@ -17,6 +17,7 @@ from models.shift import Shift
 from models.job_day import JobDay
 from models.publication_category import PublicationCategory
 from models.alert_frequency import AlertFrequency
+from models.driver_license import DriverLicense
 from schemas.extras import ContactEmail
 from schemas.contract_type import GetContracts, CreateContract, UpdateContract
 from schemas.job_type import GetJobTypes, CreateJobType, UpdateJobType
@@ -761,6 +762,20 @@ async def get_alert_frequencies(session: SessionDep) -> list[AlertFrequency]:
         result = await session.execute(query)
         alert_frequencies = result.scalars().all()
         return alert_frequencies
+    except Exception as ex:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail="An error occurred on the server"
+        )
+# Driver License Table
+@router.get("/driver-licenses", response_model=list[DriverLicense])
+async def get_driver_licenses(session: SessionDep) -> list[DriverLicense]:
+    try:
+        # Get Driver Licenses
+        query = select(DriverLicense)
+        result = await session.execute(query)
+        driver_licenses = result.scalars().all()
+        return driver_licenses
     except Exception as ex:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 

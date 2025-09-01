@@ -110,7 +110,6 @@ export const JobManagement = () => {
                                         </form>
                                     </CardSection>
                                 </Card>
-
                             }
                             {data.state == OfferState.active &&
                                 <FinishJob offerId={data.offer_id} />

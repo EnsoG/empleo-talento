@@ -13,11 +13,12 @@ export interface SidebarItemProps {
         icon: ReactNode;
         path: AppPaths;
     }[];
+    associatedPaths?: AppPaths[]; // To Activate NavLink With Others Associated AppPaths
     roles?: UserRole[]; // First Priority To Filter
     positions?: UserPosition[]; // Second Priority To Filter
 }
 
-export const SidebarItem = ({ label, icon, path, options }: SidebarItemProps) => {
+export const SidebarItem = ({ label, icon, path, options, associatedPaths }: SidebarItemProps) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -26,6 +27,7 @@ export const SidebarItem = ({ label, icon, path, options }: SidebarItemProps) =>
         <NavLink
             label={label}
             leftSection={icon}
+            active={(associatedPaths) && associatedPaths.some(p => location.pathname.includes(p))}
             defaultOpened={options.some(o => location.pathname === o.path)}>
             {
                 options.map((i, index) => (
@@ -44,7 +46,7 @@ export const SidebarItem = ({ label, icon, path, options }: SidebarItemProps) =>
         <NavLink
             label={label}
             leftSection={icon}
-            active={location.pathname === path}
+            active={location.pathname === path || (associatedPaths) && associatedPaths.some(p => location.pathname.includes(p))}
             onClick={() => navigate(path)} />
     )
 }

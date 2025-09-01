@@ -15,7 +15,7 @@ import { Plus } from "@phosphor-icons/react";
 import { useFetch } from "../../hooks/useFetch";
 import { AppPaths, ContractTypes, GenericPositions, JobDays, JobSchedules, JobTypes, PerformanceAreas, Shifts } from "../../types";
 import { endpoints } from "../../endpoints";
-import { getTomorrowDate, removeDateTime } from "../../utilities";
+import { removeDateTime } from "../../utilities";
 import { publishJobFullSchema, publishJobOneSchema, publishJobTwoSchema } from "../../schemas/panelSchemas";
 import { PanelLayout } from "../../layouts/PanelLayout";
 import { PublishJobFormOne } from "../../components/panel/publish_job/PublishJobFormOne";

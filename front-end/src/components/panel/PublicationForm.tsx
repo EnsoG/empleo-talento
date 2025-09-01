@@ -1,15 +1,24 @@
-import { useNavigate } from "react-router";
 import { useForm, zodResolver } from "@mantine/form";
+import { useEditor } from "@tiptap/react";
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import SubScript from '@tiptap/extension-subscript';
 import {
+    Box,
     Button,
     FileInput,
     Group,
     Image,
+    InputLabel,
     LoadingOverlay,
     Select,
     Skeleton,
     Stack,
-    Textarea,
+    Text,
     TextInput
 } from "@mantine/core";
 import { Eye } from "@phosphor-icons/react";
@@ -27,20 +36,34 @@ interface PublicationFormProps {
 }
 
 export const PublicationForm = ({ type, publication }: PublicationFormProps) => {
-    const navigate = useNavigate();
     const { openModal } = useModal();
     const { isLoading, fetchData } = useFetch();
     const { data: categories, isLoading: categoriesLoading, fetchData: fetchCategories } = useFetch<PublicationCategories>();
     const form = useForm({
         mode: "uncontrolled",
         initialValues: {
-            title: publication?.title,
-            description: publication?.description,
+            title: publication?.title ?? "",
+            description: publication?.description ?? "",
             state: (type == "add") ? PublicationState.active : publication?.state,
             category_id: publication?.publication_category ? String(publication.publication_category.category_id) : "",
-            image: null
+            image: (type == "add") ? undefined : null
         },
         validate: zodResolver((type == "add") ? addPublicationSchema : updatePublicationSchema)
+    });
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            Underline,
+            Link,
+            Superscript,
+            SubScript,
+            Highlight,
+            TextAlign.configure({ types: ['heading', 'paragraph'] }),
+        ],
+        content: (publication?.description) ? publication.description : undefined,
+        onUpdate: ({ editor }) => {
+            form.setFieldValue("description", editor.getHTML());
+        }
     });
 
     const getCategories = async () => await fetchCategories(endpoints.publicationCategories, {
@@ -61,6 +84,7 @@ export const PublicationForm = ({ type, publication }: PublicationFormProps) => 
         if (data.image) formData.append("image", data.image);
         // Do Request And Redirect To My Publications Page
         await fetchData(`${endpoints.publications}${(type == "add") ? "" : `/${publication?.publication_id}`}`, {
+            successRedirect: AppPaths.myPublications,
             showNotifications: true,
             successMessage: (type == "add")
                 ? "Publicacion registrada exitosamente"
@@ -69,7 +93,6 @@ export const PublicationForm = ({ type, publication }: PublicationFormProps) => 
             body: formData,
             credentials: "include"
         });
-        navigate(AppPaths.myPublications);
     }
 
     useEffect(() => {
@@ -87,12 +110,58 @@ export const PublicationForm = ({ type, publication }: PublicationFormProps) => 
                     key={form.key("title")}
                     {...form.getInputProps("title")}
                     withAsterisk />
-                <Textarea
-                    label="Descripcion"
-                    placeholder="Ingrese la descripcion"
-                    rows={4}
-                    key={form.key("description")}
-                    {...form.getInputProps("description")} />
+                <Box>
+                    <InputLabel required>
+                        Descripcion
+                    </InputLabel>
+                    <RichTextEditor editor={editor}>
+                        <RichTextEditor.Toolbar>
+                            <RichTextEditor.ControlsGroup>
+                                <RichTextEditor.Bold />
+                                <RichTextEditor.Italic />
+                                <RichTextEditor.Underline />
+                                <RichTextEditor.Strikethrough />
+                                <RichTextEditor.ClearFormatting />
+                                <RichTextEditor.Highlight />
+                                <RichTextEditor.Code />
+                            </RichTextEditor.ControlsGroup>
+                            <RichTextEditor.ControlsGroup>
+                                <RichTextEditor.H1 />
+                                <RichTextEditor.H2 />
+                                <RichTextEditor.H3 />
+                                <RichTextEditor.H4 />
+                            </RichTextEditor.ControlsGroup>
+                            <RichTextEditor.ControlsGroup>
+                                <RichTextEditor.Blockquote />
+                                <RichTextEditor.Hr />
+                                <RichTextEditor.BulletList />
+                                <RichTextEditor.OrderedList />
+                                <RichTextEditor.Subscript />
+                                <RichTextEditor.Superscript />
+                            </RichTextEditor.ControlsGroup>
+                            <RichTextEditor.ControlsGroup>
+                                <RichTextEditor.Link />
+                                <RichTextEditor.Unlink />
+                            </RichTextEditor.ControlsGroup>
+                            <RichTextEditor.ControlsGroup>
+                                <RichTextEditor.AlignLeft />
+                                <RichTextEditor.AlignCenter />
+                                <RichTextEditor.AlignJustify />
+                                <RichTextEditor.AlignRight />
+                            </RichTextEditor.ControlsGroup>
+                            <RichTextEditor.ControlsGroup>
+                                <RichTextEditor.Undo />
+                                <RichTextEditor.Redo />
+                            </RichTextEditor.ControlsGroup>
+                        </RichTextEditor.Toolbar>
+                        <RichTextEditor.Content />
+                    </RichTextEditor>
+                    {form.errors.description &&
+                        <Text size="sm" c="red">
+                            {form.errors.description}
+                        </Text>
+                    }
+                </Box>
                 {(type == "update") &&
                     <Select
                         label="Estado"
@@ -108,6 +177,7 @@ export const PublicationForm = ({ type, publication }: PublicationFormProps) => 
                     {(categories) &&
                         <Select
                             label="Categoria Publicacion"
+                            placeholder="Seleccione una categoria de publicacion"
                             data={categories.publication_categories.map((c) => ({
                                 value: String(c.category_id),
                                 label: c.name
@@ -144,6 +214,6 @@ export const PublicationForm = ({ type, publication }: PublicationFormProps) => 
                     {(type == "add") ? "Agregar" : "Actualizar"}
                 </Button>
             </Stack>
-        </form>
+        </form >
     )
 }

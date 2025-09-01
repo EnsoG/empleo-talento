@@ -16,6 +16,7 @@ export const endpoints = {
     jobDays: `${baseUrl}/metadata/job-days`,
     contactEmails: `${baseUrl}/metadata/contact-emails`,
     publicationCategories: `${baseUrl}/metadata/publication-categories`,
+    driverLicenses: `${baseUrl}/metadata/driver-licenses`,
     // Auth Endpoints
     login: `${baseUrl}/auth/login`,
     loginOAuth: `${baseUrl}/auth/login/oauth`,
@@ -76,7 +77,7 @@ export const endpoints = {
     candidatePlans: `${baseUrl}/candidate-plans`,
     // Company Plan Endpoints
     companyPlans: `${baseUrl}/company-plans`,
-    // Admin User Endpoints
+        // Admin User Endpoints
     adminUsers: `${baseUrl}/admin-users`,
     // Scraper Endpoints
     scrapersStatus: `${baseUrl}/scrapers/status`,

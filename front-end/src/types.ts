@@ -23,6 +23,7 @@ export enum AppPaths {
     /* Panel Paths */
     myAccount = "/panel/my-account",
     myCompanies = "/panel/my-companies",
+    companyDetail = "/panel/my-companies/detail",
     mySoftwares = "/panel/my-softwares",
     myJobSchedules = "/panel/my-job-schedules",
     myCandidatePlans = "/panel/my-candidate-plans",
@@ -45,11 +46,10 @@ export enum AppPaths {
     addPublication = "/panel/my-publications/add",
     publicationDetail = "/panel/my-publications/detail",
     myPublicationCategories = "/panel/my-publication-categories",
-    companyDetail = "/panel/company-detail",
     publishJob = "/panel/publish-job",
     myJobs = "/panel/my-jobs",
-    myPendingJobs = "/panel/my-pending-jobs",
     jobManagement = "/panel/job-detail",
+    myPendingJobs = "/panel/my-pending-jobs",
     adminJobManagement = "/panel/admin-job-management",
     myCompany = "/panel/my-company",
     myStaff = "/panel/my-staff",
@@ -61,10 +61,6 @@ export const months: readonly string[] = [
     "Enero", "Febrero", "Marzo", "Abril",
     "Mayo", "Junio", "Julio", "Agosto",
     "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
-
-export const driverLicenses: readonly string[] = [
-    "A1", "A2", "A3"
 ];
 
 export enum Nationality {
@@ -377,7 +373,8 @@ export type JobDays = {
 
 export enum QuestionType {
     yesOrNo = 0,
-    numeric = 1
+    numeric = 1,
+    text = 2
 }
 
 export const questionTypes: readonly { name: string, value: QuestionType }[] = [
@@ -388,6 +385,10 @@ export const questionTypes: readonly { name: string, value: QuestionType }[] = [
     {
         name: "Numerica",
         value: QuestionType.numeric
+    },
+    {
+        name: "Texto",
+        value: QuestionType.text
     }
 ];
 
@@ -492,6 +493,7 @@ export type CodelcoJob = {
     location: string;
     external_id: string;
     external_url: string;
+    url?: string; // Campo alternativo para compatibilidad
     region: string;
     postal_code: string;
     publication_date: string;
@@ -559,7 +561,10 @@ export type CandidateStudy = {
     start_date: string;
     end_date: string | null;
 }
-
+export type DriverLicense = {
+    license_id: number;
+    license: string;
+}
 export type Candidate = {
     candidate_id: number;
     run: string | null;
@@ -574,7 +579,7 @@ export type Candidate = {
     email: string;
     photo: string | null;
     resume: string | null;
-    license_id: number | null;
+    driver_license: DriverLicense | null;
 }
 
 export type SummaryCandidate = Pick<Candidate,

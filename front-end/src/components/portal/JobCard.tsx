@@ -1,23 +1,23 @@
 import { Link } from "react-router";
 import {
+    Badge,
     Box,
     Button,
     Card,
-    Flex,
-    Menu,
+    Group,
+    List,
+    Stack,
     Text
 } from "@mantine/core";
 import {
-    ArrowRight,
-    BookmarkSimple,
-    FacebookLogo,
-    LinkedinLogo,
-    ShareNetwork,
-    WhatsappLogo
+    ArrowSquareOut,
+    Buildings,
+    Calendar,
+    CalendarX,
+    MapPin,
 } from "@phosphor-icons/react";
 
 import { AppPaths, SummaryOffer, OfferFeaturedState } from "../../types";
-import { useMediaQuery } from "@mantine/hooks";
 import { parseDateToLocal } from "../../utilities";
 
 export interface JobCardProps {
@@ -25,7 +25,6 @@ export interface JobCardProps {
 }
 
 export const JobCard = ({ offer }: JobCardProps) => {
-    const isMobile = useMediaQuery("(max-width: 768px)");
 
     return (
         <Card
@@ -34,61 +33,47 @@ export const JobCard = ({ offer }: JobCardProps) => {
             shadow="sm"
             withBorder>
             {offer.featured == OfferFeaturedState.featured && <Box className="job-featured" />}
-            <Text
-                style={{ wordBreak: "break-word" }}
-                c="blue"
-                fw="bold"
-                lineClamp={2}>
-                {offer.title}
-            </Text>
-            <Text
-                c="gray"
-                size="xs"
-                mb="xs">
-                {offer.city && `${offer.city.name} ${offer.city.region.name} |`} {offer.code}
-            </Text>
-            <Flex
-                mb="xs"
-                gap="xs"
-                direction={(isMobile) ? "column" : "row"}>
-                <Link
-                    className="react-link"
-                    to={`${AppPaths.jobDetail}/${offer.offer_id}`}>
-                    <Button
-                        size="xs"
-                        rightSection={<ArrowRight />}
-                        fullWidth>
-                        Postular
-                    </Button>
-                </Link>
-                <Menu>
-                    <Menu.Target>
-                        <Button
-                            size="xs"
-                            variant="light"
-                            rightSection={<ShareNetwork />}>
-                            Compartir
-                        </Button>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Item leftSection={<LinkedinLogo />}>LinkedIn</Menu.Item>
-                        <Menu.Item leftSection={<FacebookLogo />}>Facebook</Menu.Item>
-                        <Menu.Item leftSection={<WhatsappLogo />}>WhatsApp</Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
-                <Button
-                    size="xs"
+            <Stack gap="xs">
+                <Text
+                    style={{ wordBreak: "break-word" }}
+                    c="blue"
+                    fw="bold"
+                    lineClamp={2}>
+                    {offer.title}
+                </Text>
+                <Badge
                     variant="light"
-                    rightSection={<BookmarkSimple />}>
-                    Guardar
-                </Button>
-            </Flex>
-            <Text
-                c="gray"
-                fw="bold"
-                size="sm">
-                Fecha Publicacion: {parseDateToLocal(offer.publication_date).toLocaleDateString("es-CL")}
-            </Text>
+                    leftSection={<Buildings />}>
+                    {offer.company?.trade_name ?? "Empleo Talento"}
+                </Badge>
+                <List
+                    size="xs"
+                    spacing="xs"
+                    c="gray"
+                    center>
+                    {(offer.city) && <List.Item icon={<MapPin />}>{offer.city.region.name} | {offer.city.name}</List.Item>}
+                    <List.Item icon={<Calendar />}>Fecha Publicacion: {parseDateToLocal(offer.publication_date).toLocaleDateString("es-CL")}</List.Item>
+                    <List.Item icon={<CalendarX />}>Fecha Cierre: {
+                        (offer.closing_date)
+                            ? parseDateToLocal(offer.closing_date).toLocaleDateString("es-CL")
+                            : "Sin Especificar"
+                    }
+                    </List.Item>
+                </List>
+                {(offer.description) && <Text size="sm" lineClamp={3}>{offer.description}</Text>}
+                <Group justify="space-between">
+                    <Text size="xs" c="gray">ID: {offer.code}</Text>
+                    <Link
+                        className="react-link"
+                        to={`${AppPaths.jobDetail}/${offer.offer_id}`}>
+                        <Button
+                            variant="light"
+                            rightSection={<ArrowSquareOut />}>
+                            Ver Detalles
+                        </Button>
+                    </Link>
+                </Group>
+            </Stack>
         </Card>
     )
 }

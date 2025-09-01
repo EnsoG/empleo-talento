@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 
 import { useFetch } from "../../hooks/useFetch";
-import { Candidate, driverLicenses, Gender, Nationality } from "../../types";
+import { Candidate, DriverLicenses, Gender, Nationality } from "../../types";
 import { endpoints } from "../../endpoints";
 import { personalInfoSchema } from "../../schemas/portalSchemas";
 import { parseDateToLocal } from "../../utilities";
@@ -24,6 +24,7 @@ import { PortalBanner } from "../../components/portal/PortalBanner";
 
 export const PersonalInfo = () => {
     const { data: candidate, isLoading: candidateLoading, fetchData: fetchCandidate } = useFetch<Candidate>();
+    const { data: licenses, isLoading: licensesLoading, fetchData: fetchLicenses } = useFetch<DriverLicenses>();
     const { isLoading: updateLoading, fetchData: fetchUpdate } = useFetch();
     const form = useForm({
         mode: "uncontrolled",
@@ -35,6 +36,9 @@ export const PersonalInfo = () => {
         credentials: "include"
     });
 
+    const getDriverLicenses = async () => await fetchLicenses(endpoints.driverLicenses, {
+        method: "GET"
+    });
     const handleSubmit = async (values: typeof form.values) => {
         // Transform Data And Do Request
         const data = personalInfoSchema.parse(values);
@@ -54,6 +58,7 @@ export const PersonalInfo = () => {
 
     useEffect(() => {
         getCandidate();
+        getDriverLicenses();
     }, []);
 
     useEffect(() => {
@@ -67,7 +72,7 @@ export const PersonalInfo = () => {
                 phone: candidate.phone,
                 gender: candidate.gender,
                 nationality: candidate.nationality,
-                license_id: candidate.license_id ? String(candidate.license_id) : null
+                license_id: candidate.driver_license ? String(candidate.driver_license.license_id) : null
             });
         }
     }, [candidate]);
@@ -84,7 +89,7 @@ export const PersonalInfo = () => {
                     <Divider my="sm" />
                     <Skeleton
                         height="100%"
-                        visible={candidateLoading}>
+                        visible={candidateLoading || licensesLoading}>
                         <form onSubmit={form.onSubmit(handleSubmit)}>
                             <LoadingOverlay visible={updateLoading} />
                             <Stack>
@@ -143,18 +148,21 @@ export const PersonalInfo = () => {
                                     {...form.getInputProps("nationality")}
                                     searchable
                                     clearable />
+                                    
+                            {(licenses) &&
                                 <Select
                                     label="Licencia Conducir"
                                     placeholder="Seleccione su licencia de conducir"
                                     key={form.key("license_id")}
                                     {...form.getInputProps("license_id")}
-                                    data={driverLicenses.map((l, i) => ({
-                                        value: String(i),
-                                        label: l
+                                    data={licenses.map((l) => ({
+                                            value: String(l.license_id),
+                                            label: l.license
                                     }))}
                                     comboboxProps={{ withinPortal: false }}
                                     clearable
                                     searchable />
+                            }
                                 <Button type="submit">Actualizar</Button>
                             </Stack>
                         </form>

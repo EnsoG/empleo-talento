@@ -1,5 +1,6 @@
-import { useParams } from "react-router";
 import { useEffect } from "react";
+import { useParams } from "react-router";
+import DOMPurify from "dompurify";
 import {
     Badge,
     Box,
@@ -67,9 +68,9 @@ export const PublicationDetail = () => {
                                 </Stack>
                             </Grid.Col>
                             <Grid.Col span={{ base: 12, md: 8 }}>
-                                <Text style={{ whiteSpace: 'pre-wrap', wordBreak: "break-word" }}>
-                                    {data?.description}
-                                </Text>
+                                {(data?.description) &&
+                                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.description) }} />
+                                }
                             </Grid.Col>
                         </Grid>
                     </Skeleton>

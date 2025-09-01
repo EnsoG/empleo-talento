@@ -15,6 +15,10 @@ class GenderEnum(str, Enum):
     male = "Masculino"
     female = "Femenino"
     dontSpecify = "No Especificar"
+    
+class GetDriverLicense(BaseModel):
+    license_id: int
+    license: str
 
 class BaseCandidate(BaseModel):
     model_config=ConfigDict(
@@ -40,7 +44,7 @@ class GetCandidate(GetSummaryCandidate):
     nationality: str | None = None
     photo: str | None = None
     resume: str | None = None
-    license_id: int | None = None
+    driver_license: GetDriverLicense | None = None
 
 class CreateCandidate(BaseCandidate):
     name: str

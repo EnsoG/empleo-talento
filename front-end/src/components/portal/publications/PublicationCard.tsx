@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import {
+    Badge,
     Card,
     Divider,
     Grid,
@@ -45,16 +46,12 @@ export const PublicationCard = ({ publication }: PublicationCardProps) => {
                             </Title>
                             <Divider />
                             <Text
+                                size="sm"
                                 c="gray"
                                 fw="bold">
-                                {parseDateToLocal(publication.creation_date).toLocaleDateString("es-CL")}
+                                Fecha Publicacion: {parseDateToLocal(publication.creation_date).toLocaleDateString("es-CL")}
                             </Text>
-                            <Text
-                                size="sm"
-                                style={{ whiteSpace: 'pre-wrap', wordBreak: "break-word" }}
-                                lineClamp={4}>
-                                {publication.description}
-                            </Text>
+                            <Badge>{publication.publication_category.name}</Badge>
                         </Stack>
                     </Grid.Col>
                 </Grid>

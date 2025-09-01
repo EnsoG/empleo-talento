@@ -43,7 +43,11 @@ async def get_candidate(
 ) -> GetCandidate | JSONResponse:
     try:
         # Check If Candidate Exists
-        candidate = await session.get(Candidate, current_user.get("sub"))
+        query = select(Candidate).options(
+            selectinload(Candidate.driver_license)
+        ).where(Candidate.candidate_id == current_user.get("sub"))
+        result = await session.execute(query)
+        candidate = result.scalar_one_or_none()
         if not candidate:
             return JSONResponse(
                 status_code=status.HTTP_404_NOT_FOUND,

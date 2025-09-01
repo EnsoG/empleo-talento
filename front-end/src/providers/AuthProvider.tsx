@@ -24,8 +24,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         await checkAuth()
     }, [fetchData, checkAuth]);
 
-    console.log(data);
-
     useEffect(() => {
         checkAuth();
     }, [checkAuth]);
