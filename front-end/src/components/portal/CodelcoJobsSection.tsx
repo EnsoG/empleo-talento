@@ -368,18 +368,6 @@ const JobCard: React.FC<JobCardProps> = ({ job, onViewDetails }) => {
         return 'Información detallada disponible en el sitio web de Codelco';
     };
 
-    const handleOpenExternal = () => {
-        const url = job.url || job.external_url;
-        console.log('🔗 JobCard: URL a usar:', url);
-        console.log('🔗 JobCard: job.url:', job.url);
-        console.log('🔗 JobCard: job.external_url:', job.external_url);
-        if (url && url.startsWith('http')) {
-            window.open(url, '_blank');
-        } else {
-            console.error('❌ URL inválida para abrir:', url);
-        }
-    };
-
     return (
         <Card
             padding="lg"

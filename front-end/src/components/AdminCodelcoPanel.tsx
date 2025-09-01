@@ -334,6 +334,7 @@ export const AdminCodelcoPanel: React.FC = () => {
             
         } catch (error) {
             console.error('Error obteniendo estado:', error);
+
             notifications.show({
                 title: 'Error',
                 message: 'Error al obtener el estado del scraping de Codelco',
@@ -359,6 +360,7 @@ export const AdminCodelcoPanel: React.FC = () => {
             
         } catch (error) {
             console.error('Error obteniendo empleos:', error);
+
             notifications.show({
                 title: 'Error',
                 message: 'Error al obtener empleos de Codelco',
@@ -381,8 +383,8 @@ export const AdminCodelcoPanel: React.FC = () => {
                 throw new Error(`Error HTTP: ${response.status}`);
             }
 
-            const result = await response.json();
-            
+            await response.json();
+
             notifications.show({
                 title: 'Scraping Iniciado',
                 message: 'Scraping de Codelco iniciado exitosamente! El proceso se ejecuta en segundo plano.',
@@ -396,6 +398,7 @@ export const AdminCodelcoPanel: React.FC = () => {
 
         } catch (error) {
             console.error('Error ejecutando scraping:', error);
+
             notifications.show({
                 title: 'Error',
                 message: 'Error al ejecutar el scraping de Codelco',
@@ -418,6 +421,7 @@ export const AdminCodelcoPanel: React.FC = () => {
             }
 
             const result = await response.json();
+
             notifications.show({
                 title: 'Empleos Desactivados',
                 message: `Se desactivaron ${result.deactivated_count} empleos de Codelco`,
@@ -429,6 +433,7 @@ export const AdminCodelcoPanel: React.FC = () => {
 
         } catch (error) {
             console.error('Error desactivando empleos:', error);
+
             notifications.show({
                 title: 'Error',
                 message: 'Error al desactivar empleos de Codelco',
@@ -572,3 +577,6 @@ export const AdminCodelcoPanel: React.FC = () => {
 };
 
 export default AdminCodelcoPanel;
+
+
+

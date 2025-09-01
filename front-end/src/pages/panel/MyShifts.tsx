@@ -9,16 +9,16 @@ import {
     Skeleton,
     Stack
 } from "@mantine/core";
-import { GridFour, Info, Plus, Swap } from "@phosphor-icons/react";
+import { Info, Plus, Swap } from "@phosphor-icons/react";
 
 import { useFetch } from "../../hooks/useFetch";
 import { useModal } from "../../hooks/useModal";
 import { Shifts } from "../../types";
 import { PanelLayout } from "../../layouts/PanelLayout";
 import { SearchBar } from "../../components/SearchBar";
-import { SoftwareForm } from "../../components/panel/my_softwares/SoftwareForm";
+
 import { endpoints } from "../../endpoints";
-import { SoftwareTable } from "../../components/panel/my_softwares/SoftwareTable";
+
 import { ShiftForm } from "../../components/panel/my_shifts/ShiftForm";
 import { ShiftTable } from "../../components/panel/my_shifts/ShiftTable";
 

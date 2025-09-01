@@ -14,7 +14,7 @@ import {
     Candidate,
     Gender,
     Nationality,
-    driverLicenses
+    // DriverLicense
 } from "../../../types";
 import { endpoints } from "../../../endpoints";
 import { personalInfoSchema } from "../../../schemas/portalSchemas";
@@ -30,7 +30,7 @@ interface PersonalInfoFormProps {
         "gender" |
         "nationality" |
         "phone" |
-        "license_id"
+        "driver_license"
     >;
     onGetCandidate: () => Promise<void>;
 }
@@ -49,7 +49,7 @@ export const PersonalInfoForm = ({ candidate, onGetCandidate: getCandidate }: Pe
             phone: candidate?.phone,
             gender: candidate?.gender,
             nationality: candidate?.nationality,
-            license_id: candidate?.license_id ? String(candidate.license_id) : null
+            driver_license: candidate?.driver_license ? String(candidate.driver_license) : null
         },
         validate: zodResolver(personalInfoSchema)
     });
@@ -133,9 +133,9 @@ export const PersonalInfoForm = ({ candidate, onGetCandidate: getCandidate }: Pe
                 <Select
                     label="Tipo Licencia"
                     placeholder="Seleccione su tipo licencia"
-                    key={form.key("license_id")}
-                    {...form.getInputProps("license_id")}
-                    data={driverLicenses.map((l, i) => ({
+                    key={form.key("driver_license")}
+                    {...form.getInputProps("driver_license")}
+                    data={[].map((l: any, i: number) => ({
                         value: String(i),
                         label: l
                     }))}
