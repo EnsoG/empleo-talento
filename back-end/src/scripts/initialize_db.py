@@ -45,7 +45,8 @@ from models import (
     alert_frequency,
     candidate_alert_configuration,
     candidate_position_preference,
-    work_experience
+    work_experience,
+    codelco_job
 )
 from utilities import get_password_hash
 
