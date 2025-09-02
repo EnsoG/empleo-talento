@@ -212,8 +212,8 @@ async def login(
             key="access_token",
             value=access_token,
             httponly=True,
-            secure=True,
-            samesite="none"
+            secure=False,
+            samesite="lax"
         )
         return response
     except Exception as ex:
@@ -267,8 +267,8 @@ async def login_oauth(
             key="access_token",
             value=access_token,
             httponly=True,
-            secure=True,
-            samesite="none"
+            secure=False,
+            samesite="lax"
         )
         return response
     except Exception as ex:
@@ -291,8 +291,8 @@ async def logout(
         response.delete_cookie(
             key="access_token",
             httponly=True,
-            secure=True,
-            samesite="none"
+            secure=False,
+            samesite="lax"
         )
         response.status_code = status.HTTP_200_OK
         return response
