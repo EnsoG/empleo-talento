@@ -30,12 +30,6 @@ class CodelcoJob(CodelcoJobBase, table=True):
     fecha_creado: datetime = Field(default_factory=datetime.now, description="Fecha de creación en DB")
     fecha_actualizado: datetime = Field(default_factory=datetime.now, description="Fecha de última actualización")
 
-
-class CodelcoJobCreate(CodelcoJobBase):
-    """Schema para crear empleos de Codelco"""
-    pass
-
-
 class CodelcoJobRead(CodelcoJobBase):
     """Schema para leer empleos de Codelco"""
     id: int
